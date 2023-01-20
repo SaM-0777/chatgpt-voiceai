@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
+import { Checkbox } from 'react-native-paper';
 import { SvgXml } from 'react-native-svg';
 
 import { SignupHeader, InputArea, PasswordInput } from '../../components';
-
 import { GoogleLogo, FacebookLogo } from '../../svg';
+
+import AppStyles from '../../AppStyles';
 import { signupStyles } from './Styles';
 
 
@@ -14,7 +16,10 @@ type SignupType = {
 };
 
 export default function Signup() {
-  const [signupInfo, setSignupInfo] = useState<SignupType>({email: "", password: ""})
+  const [signupInfo, setSignupInfo] = useState<SignupType>({ email: "", password: "" })
+  const [checked, setChecked] = useState<boolean>(false)
+
+  function toggleCheck() { setChecked(prevState => !prevState) }
 
   async function signup() {
     console.log(signupInfo)
@@ -32,6 +37,15 @@ export default function Signup() {
       <SignupHeader />
       <InputArea inputFor='email' text={signupInfo!} setText={setSignupInfo} />
       <PasswordInput inputFor='password' text={signupInfo!} setText={setSignupInfo} />
+      <View style={signupStyles.checkboxContainer} >
+        <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={toggleCheck} color={AppStyles.GrayColor2} />
+        <Text style={signupStyles.checkboxText} >
+          By continuing you accept our
+          <Text style={{ textDecorationLine: 'underline' }} > Privacy Policy </Text>
+          and
+          <Text style={{ textDecorationLine: 'underline' }} > Terms of use.</Text>
+        </Text>
+      </View>
       <TouchableOpacity activeOpacity={0.95} onPress={signup} style={signupStyles.signupBtnContainer} >
         <Text style={signupStyles.signuptext} >Signup</Text>
       </TouchableOpacity>

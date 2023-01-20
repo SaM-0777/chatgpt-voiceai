@@ -8,7 +8,7 @@ import { authStyles } from './Styles';
 
 
 export default function Auth() {
-  const [state, setState] = useState<boolean>(false)
+  const [state, setState] = useState<boolean>(true)
 
   return (
     <View style={authStyles.container} >

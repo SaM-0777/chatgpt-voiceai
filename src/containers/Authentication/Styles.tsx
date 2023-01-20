@@ -32,6 +32,18 @@ export const signupStyles = StyleSheet.create({
     fontFamily: "PoppinsBold",
     fontSize: 20,
   },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  checkboxText: {
+    width: '77%',
+    color: AppStyles.GrayColor2,
+    fontFamily: "PoppinsRegular",
+    fontSize: 13,
+    marginLeft: 5,
+  },
   signupBtnContainer: {
     width: 200,
     height: 60,
@@ -90,6 +102,18 @@ export const loginStyles = StyleSheet.create({
     color: '#FFF',
     fontFamily: "PoppinsBold",
     fontSize: 20,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+  },
+  checkboxText: {
+    width: '77%',
+    color: AppStyles.GrayColor2,
+    fontFamily: "PoppinsRegular",
+    fontSize: 13,
+    marginLeft: 5,
   },
   loginBtnContainer: {
     width: 200,
