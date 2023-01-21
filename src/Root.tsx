@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-import Animated, { TransformStyleTypes, useSharedValue, useAnimatedStyle, withTiming, } from 'react-native-reanimated';
+import Animated, { ZoomIn, useSharedValue, useAnimatedStyle, useValue, runOnJS, withTiming, ZoomOut, } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 
 import { OnBoarding, Auth, } from './containers';
@@ -12,6 +12,7 @@ const Delay = 1000
 const Duration = 500
 
 export default function Root() {
+  const [loading, setLoading] = useState(true)
   const offsetY = useSharedValue(0)
   const scale = useSharedValue(1)
   const animateLottieContainer = useAnimatedStyle(() => {
@@ -20,11 +21,18 @@ export default function Root() {
     }
   })
 
+  function loadingFinish() {
+    // console.log("finished")
+    setLoading(false)
+  }
+
   useEffect(() => {
     const timer = setTimeout(() => {
       // setAnimate(true)
-      offsetY.value = withTiming(ToOffsetY, {
-        duration: Duration
+      offsetY.value = withTiming(ToOffsetY, { duration: Duration }, (finished) => {
+        if (finished) {
+          runOnJS(loadingFinish)()
+        }
       })
       scale.value = withTiming(ToScale, {
         duration: Duration
@@ -35,7 +43,6 @@ export default function Root() {
       clearTimeout(timer)
     }
   }, [])
-  
 
   return (
     <View style={styles.container} >
@@ -47,9 +54,11 @@ export default function Root() {
         />
       </Animated.View>
       <View style={[styles.wrapper]} >
-        <Animated.View style={{  }} >
-          <Auth />
-        </Animated.View>
+        {!loading && (
+          <Animated.View entering={ZoomIn.duration(300)} exiting={ZoomOut.duration(200)} >
+            <Auth />
+          </Animated.View>
+        )}
       </View>
     </View>
   )
