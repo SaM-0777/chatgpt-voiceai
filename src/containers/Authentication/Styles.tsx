@@ -13,7 +13,7 @@ export const authStyles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "PoppinsRegular",
     textAlign: 'center',
-    marginVertical: 30,
+    marginVertical: 10,
   },
   text: {
     // color: AppStyles.SecondaryColor1

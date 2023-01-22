@@ -12,7 +12,11 @@ export default function Auth() {
 
   return (
     <View style={authStyles.container} >
-      {state ? <Signup /> : <Login />}
+      {state ?
+        <Signup />
+        :
+        <Login />
+      }
       <Text style={authStyles.footerText} >
         {state ? "Already have an account? " : "Don't have an account yet? "}
         <Text onPress={() => setState(prevState => !prevState)} style={authStyles.text} >

@@ -4,6 +4,7 @@
     "slug": "voiceai",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "com.relm.voiceai",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -18,9 +19,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleidentifier": "com.relm.voiceai",
+      "bundleIdentifier": "com.relm.voiceai"
     },
     "android": {
+      "package": "com.relm.voiceai",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
@@ -28,6 +32,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "93467a23-c925-4aae-aa18-71035f03d915"
+      }
     }
   }
 }

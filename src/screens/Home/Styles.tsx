@@ -1,25 +1,16 @@
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
-import Navigation from './navigations';
-
-
-export default function Root() {
-
-  return (
-    <View style={styles.container} >
-      <Navigation />
-    </View>
-  )
-};
+import AppStyles from '../../AppStyles';
 
 
-const styles = StyleSheet.create({
+export default StyleSheet.create({
   container: {
     flex: 1,
-    /*alignItems: 'center',
-    justifyContent: 'center',*/
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFF',
   },
-  /*animationContainer: {
+  animationContainer: {
     width: '80%',
     aspectRatio: 1,
     alignItems: 'center',
@@ -37,6 +28,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 15,
     // backgroundColor: 'green',
-  },*/
-});
-
+  },
+})
