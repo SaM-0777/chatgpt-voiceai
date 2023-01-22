@@ -90,7 +90,7 @@ export default function Home({ navigation }: HomePropsType) {
           <>
             {user ?
               <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                <Chat />
+                <Chat navigation={navigation} />
               </Animated.View>
               :
               <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
