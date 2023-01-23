@@ -89,4 +89,5 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       scrollToBottomComponent={ScrollToBottomComponent}
     />
   )
-}
+};
+

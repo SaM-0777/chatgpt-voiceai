@@ -15,7 +15,7 @@ type InputAreaPropsType = {
   inputFor: string;
   text: accountInfoType;
   setText: (accountInfo: accountInfoType) => void;
-}
+};
 
 export default function InputArea({ inputFor, text, setText }: InputAreaPropsType) {
   const [value, setValue] = useState<string>()

@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator, ToastAndroid } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Checkbox } from 'react-native-paper';
 import { SvgXml } from 'react-native-svg';
 import * as GoogleAuth from 'expo-auth-session/providers/google';
@@ -7,38 +8,54 @@ import * as GoogleAuth from 'expo-auth-session/providers/google';
 import { SignupHeader, InputArea, PasswordInput } from '../../components';
 import { GoogleLogo, FacebookLogo } from '../../svg';
 
+import { register } from '../../utils/api';
+
 // import AppStyles from '../../AppStyles';
 import { signupStyles } from './Styles';
+import AppStyles from '../../AppStyles';
 
+
+type SignupPropsType = {
+  setUser: (token: string) => void;
+};
 
 type SignupType = {
   email: string;
   password: string;
 };
 
-export default function Signup() {
+export default function Signup({setUser}: SignupPropsType) {
+  const [loading, setLoading] = useState(false)
   const [signupInfo, setSignupInfo] = useState<SignupType>({ email: "", password: "" })
   // Google
-  const [request, response, promptAsync] = GoogleAuth.useAuthRequest({
+  /*const [request, response, promptAsync] = GoogleAuth.useAuthRequest({
     androidClientId: "1081080270484-8k0afvjatgoo33q07p7t69j0h4qq33uq.apps.googleusercontent.com",
     expoClientId: "1081080270484-ic01a648fnhcis23qlmnfju66pn9c77p.apps.googleusercontent.com",
-  })
-  const [checked, setChecked] = useState<boolean>(false)
+  })*/
+  /*const [checked, setChecked] = useState<boolean>(false)
 
-  function toggleCheck() { setChecked(prevState => !prevState) }
+  function toggleCheck() { setChecked(prevState => !prevState) }*/
 
   async function signup() {
-    // console.log(signupInfo)
+    setLoading(true)
+    const response = await register(signupInfo.email, signupInfo.password)
+    if (Object.keys(response)[0] === 'success') {
+      await AsyncStorage.setItem('@user', JSON.stringify(response.success))
+      setUser(response.success!)
+    } else {
+      ToastAndroid.show(response.error, ToastAndroid.LONG)
+    }
+    setLoading(false)
   }
 
-  async function googleSignIn() {
+  /*async function googleSignIn() {
     const authSessionResult = await promptAsync()
     // set result.user to Asyncstorage @user
     console.log(authSessionResult)
   }
   async function facebookSignIn() {
     
-  }
+  }*/
 
   return (
     <View style={signupStyles.container} >
@@ -54,22 +71,22 @@ export default function Signup() {
           <Text style={{ textDecorationLine: 'underline' }} > Terms of use.</Text>
         </Text>
       </View>*/}
-      <TouchableOpacity activeOpacity={0.95} onPress={signup} style={signupStyles.signupBtnContainer} >
-        <Text style={signupStyles.signuptext} >Signup</Text>
+      <TouchableOpacity disabled={loading} activeOpacity={0.95} onPress={signup} style={signupStyles.signupBtnContainer} >
+        {!loading ? <Text style={signupStyles.signuptext} >Signup</Text> : <ActivityIndicator color={'#FFF'} />}
       </TouchableOpacity>
       <View style={signupStyles.orContainer} >
         <View style={signupStyles.orVector} />
         <Text style={signupStyles.orText} >Or</Text>
         <View style={signupStyles.orVector} />
       </View>
-      <View style={signupStyles.socialIconContainer} >
+      {/*<View style={signupStyles.socialIconContainer} >
         <TouchableOpacity activeOpacity={0.7} onPress={googleSignIn} style={[signupStyles.socialButton, { marginRight: 20 }]} >
           <SvgXml xml={GoogleLogo} />
         </TouchableOpacity>
         <TouchableOpacity activeOpacity={0.7} onPress={facebookSignIn} style={[signupStyles.socialButton, { marginLeft: 20 }]} >
           <SvgXml xml={FacebookLogo} />
         </TouchableOpacity>
-      </View>
+      </View>*/}
     </View>
   )
 };
