@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -22,6 +22,13 @@ const ToScale = 0.4
 const Delay = 1000
 const Duration = 500
 
+
+interface UserContextType {
+  // user: string | object | undefined;
+  setUser: (newValue: string | object | undefined) => void;
+}
+export const UserContext = createContext<UserContextType>({ setUser: () => {} })
+
 export default function Home({ navigation }: HomePropsType) {
   const [user, setUser] = useState<string | object | undefined>()
   const [loading, setLoading] = useState(true)
@@ -39,7 +46,8 @@ export default function Home({ navigation }: HomePropsType) {
       const localUser = await AsyncStorage.getItem('@user')
       if (localUser) {
         // verify token
-        const response = await verify(localUser)
+        const token = JSON.parse(localUser)
+        const response = await verify(token)
         if (Object.keys(response)[0] === 'success') {
           await AsyncStorage.setItem('@user', JSON.stringify(response.success))
           // set user with fresh token
@@ -73,40 +81,37 @@ export default function Home({ navigation }: HomePropsType) {
 
   useEffect(() => {
     getLocalUser()
-    console.log(Dimensions.get('window').height)
     return () => {}
   }, [])
 
   return (
-    <KeyboardAwareScrollView  contentContainerStyle={{ flex: 1 }} >
-      <ScrollView contentContainerStyle={Styles.container} >
-        <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
-          <LottieView
-            source={require('../../animations/ai-animation.json')}
-            autoPlay
-            loop
-          />
-        </Animated.View>
-        <View style={[Styles.wrapper]} >
-          {!loading && (
-            <>
-              {user ?
-                <>
-                  <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: -(Dimensions.get('window').height / 3.52), right: 25 }} />
-                  <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                    <Chat navigation={navigation} />
-                  </Animated.View>
-                </>
-                :
+    <View style={Styles.container} >
+      <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
+        <LottieView
+          source={require('../../animations/ai-animation.json')}
+          autoPlay
+          loop
+        />
+      </Animated.View>
+      <View style={[Styles.wrapper]} >
+        {!loading && (
+          <>
+            {user ?
+              <>
+                <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: -(Dimensions.get('window').height / 3.52), right: 25 }} />
                 <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                  <Auth setUser={setUser} />
+                  <Chat navigation={navigation} />
                 </Animated.View>
-              }
-            </>
-          )}
-        </View>
-      </ScrollView>
-    </KeyboardAwareScrollView>
+              </>
+              :
+              <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
+                <Auth setUser={setUser} />
+              </Animated.View>
+            }
+          </>
+        )}
+      </View>
+    </View>
   )
 };
 

@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Octicons, MaterialIcons } from '@expo/vector-icons';
+
+import { UserContext } from '../Home/Home';
 
 import Styles from './Styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,10 +13,12 @@ type SettingsPropsType = {
 }
 
 export default function Settings({ navigation }: SettingsPropsType) {
+  const { setUser } = useContext(UserContext)
 
   async function onLogout() {
     try {
       await AsyncStorage.removeItem('@user')
+      setUser(undefined)
       navigation.navigate('home')
     } catch (error) {
       console.log("Settings.Logout: ", error)

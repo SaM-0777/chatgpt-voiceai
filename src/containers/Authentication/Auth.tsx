@@ -13,6 +13,7 @@ type AuthPropsType = {
 }
 
 export default function Auth({ setUser }: AuthPropsType) {
+  const [loading, setLoading] = useState(false)
   const [state, setState] = useState<boolean>(true)
 
   // remove stored user
@@ -28,13 +29,13 @@ export default function Auth({ setUser }: AuthPropsType) {
   return (
     <View style={authStyles.container} >
       {state ?
-        <Signup setUser={setUser} />
+        <Signup loading={loading} setLoading={setLoading} setUser={setUser} />
         :
-        <Login setUser={setUser} />
+        <Login loading={loading} setLoading={setLoading} setUser={setUser} />
       }
       <Text style={authStyles.footerText} >
         {state ? "Already have an account? " : "Don't have an account yet? "}
-        <Text onPress={() => setState(prevState => !prevState)} style={authStyles.text} >
+        <Text onPress={loading ? () => {} : () => setState(prevState => !prevState)} style={authStyles.text} >
           {state ? "Login" : "Signup"}
         </Text>
       </Text>

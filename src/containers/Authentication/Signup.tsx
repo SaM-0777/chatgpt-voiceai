@@ -17,6 +17,8 @@ import AppStyles from '../../AppStyles';
 
 type SignupPropsType = {
   setUser: (token: string) => void;
+  loading: boolean;
+  setLoading: (state: boolean) => void;
 };
 
 type SignupType = {
@@ -24,8 +26,8 @@ type SignupType = {
   password: string;
 };
 
-export default function Signup({setUser}: SignupPropsType) {
-  const [loading, setLoading] = useState(false)
+export default function Signup({setUser, loading, setLoading}: SignupPropsType) {
+  /*const [loading, setLoading] = useState(false)*/
   const [signupInfo, setSignupInfo] = useState<SignupType>({ email: "", password: "" })
   // Google
   /*const [request, response, promptAsync] = GoogleAuth.useAuthRequest({

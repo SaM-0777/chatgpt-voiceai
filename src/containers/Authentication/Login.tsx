@@ -13,6 +13,8 @@ import { loginStyles } from './Styles';
 
 type LoginPropsType = {
   setUser: (token: string) => void;
+  loading: boolean;
+  setLoading: (state: boolean) => void;
 };
 
 type LoginType = {
@@ -20,8 +22,7 @@ type LoginType = {
   password: string;
 };
 
-export default function Login({ setUser }: LoginPropsType) {
-  const [loading, setLoading] = useState(false)
+export default function Login({ setUser, loading, setLoading }: LoginPropsType) {
   const [loginInfo, setLoginInfo] = useState<LoginType>({email: "", password: ""})
 
   async function onLogin() {
