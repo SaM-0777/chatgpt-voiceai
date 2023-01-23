@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { useSharedValue, useAnimatedStyle, FadeIn, runOnJS, withTiming, FadeOut, } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import { Octicons } from '@expo/vector-icons';
+
+import { verify } from '../../utils/api';
 
 import { OnBoarding, Auth, Chat } from '../../containers';
 
@@ -37,9 +39,15 @@ export default function Home({ navigation }: HomePropsType) {
       const localUser = await AsyncStorage.getItem('@user')
       if (localUser) {
         // verify token
-
-        // setUser to user
-        setUser(localUser)
+        const response = await verify(localUser)
+        if (Object.keys(response)[0] === 'success') {
+          await AsyncStorage.setItem('@user', JSON.stringify(response.success))
+          // set user with fresh token
+          setUser(response.success!)
+        } else {
+          setUser(undefined)
+          ToastAndroid.show(response.error, ToastAndroid.LONG)
+        }
         // render chat modal
       } else {
         // render auth modal
