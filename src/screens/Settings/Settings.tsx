@@ -2,18 +2,17 @@ import React, { useContext } from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Octicons, MaterialIcons } from '@expo/vector-icons';
 
-import { UserContext } from '../Home/Home';
-
 import Styles from './Styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 type SettingsPropsType = {
+  route: any;
   navigation: any;
 }
 
-export default function Settings({ navigation }: SettingsPropsType) {
-  const { setUser } = useContext(UserContext)
+export default function Settings({ route, navigation }: SettingsPropsType) {
+  const { setUser } = route?.params
 
   async function onLogout() {
     try {

@@ -1,4 +1,4 @@
-import { useEffect, useState, createContext } from 'react';
+import { useEffect, useState } from 'react';
 import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,13 +21,6 @@ const ToOffsetY = -0.37 * Dimensions.get('window').height
 const ToScale = 0.4
 const Delay = 1000
 const Duration = 500
-
-
-interface UserContextType {
-  // user: string | object | undefined;
-  setUser: (newValue: string | object | undefined) => void;
-}
-export const UserContext = createContext<UserContextType>({ setUser: () => {} })
 
 export default function Home({ navigation }: HomePropsType) {
   const [user, setUser] = useState<string | object | undefined>()
@@ -77,7 +70,11 @@ export default function Home({ navigation }: HomePropsType) {
 
   function loadingFinish() { setLoading(false) }
 
-  function onPressSettings() { navigation.navigate('settings') }
+  function onPressSettings() {
+    navigation.navigate('settings', {
+      setUser
+    })
+  }
 
   useEffect(() => {
     getLocalUser()
