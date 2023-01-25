@@ -130,6 +130,8 @@ export async function generate(token: string, message: string) {
         message: message,
     }
 
+    console.log(token, message)
+
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -142,9 +144,9 @@ export async function generate(token: string, message: string) {
         const responseJson = await response.json()
         // console.log("responseJson: ", responseJson)
         if (response.status === 200) {
-            return { result: responseJson.result }
+            return responseJson.result
         } else {
-            return { error: "An error occurred while generating the response." }
+            return { error: "An error occurred while generating the response" }
         }
     } catch (error) {
         return { error: "An error occured. Try again later." }

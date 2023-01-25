@@ -1,19 +1,36 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native';
+import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+
+import { generate } from '../../utils/api';
 
 import { CustomInputToolbarStyle } from './Styles';
-import { IMessage } from 'react-native-gifted-chat';
 
 
-type CustomInputToolbarPropsType = {
-  props: any;
-}
+export default function CustomInputToolbar(userMessage: string, setUserMessage: (text: string) => void, messages: IMessage[], setMessages: (messages: IMessage[] | ((previousMessage: IMessage[]) => IMessage[])) => void, responseLoading: boolean, setResponseLoading: (loadin: boolean) => void, getResponse: (value: string) => void) {
 
-export default function CustomInputToolbar(userMessage: string, setUserMessage: (text: string) => void, setMessages: (messages: IMessage[]) => void, responseLoading: boolean, setResponseLoading: (loadin: boolean) => void) {
-
-  function onPress() {
-    console.log(userMessage)
+  async function onPress() {
+    if (userMessage && userMessage !== "") {
+      setResponseLoading(true)
+      let enteredMessage: IMessage[] = [{
+        _id: Math.floor(Math.random() * (100000000 - 100000 + 1)) + 1,
+        text: userMessage,
+        createdAt: new Date(),
+        user: {
+          _id: 1,
+          name: 'Me',
+        }
+      }]
+      // reset the userMessage
+      setUserMessage("")
+      setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, enteredMessage))
+      // post the chat
+      getResponse(userMessage)
+      // setResponseLoading(false)
+    } else {
+      ToastAndroid.show("No Message", ToastAndroid.SHORT)
+    }
   }
 
   return (
@@ -27,8 +44,18 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
           onChangeText={setUserMessage}
         />
       </View>
-      <TouchableOpacity activeOpacity={0.8} onPress={onPress} style={CustomInputToolbarStyle.textToolbarIcon} >
-        <MaterialCommunityIcons name="send" size={25} color="white" />
+      <TouchableOpacity activeOpacity={0.8} disabled={responseLoading} onPress={onPress} style={CustomInputToolbarStyle.textToolbarIcon} >
+        {userMessage === "" ?
+          <FontAwesome name="microphone" size={24} color="white" />
+          :
+          <>
+            {responseLoading ?
+              <ActivityIndicator size={'small'} color='white' />
+              :
+              <MaterialCommunityIcons name="send" size={25} color={"white"} />
+            } 
+          </>
+        }
       </TouchableOpacity>
     </View>
   )

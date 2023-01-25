@@ -11,6 +11,7 @@ import { generate, getPreviousChats } from "../../utils/api";
 
 import AppStyles from "../../AppStyles";
 import Styles from './Styles';
+import { StatusBar } from "expo-status-bar";
 
 
 type ChatRoomPropsType = {
@@ -83,29 +84,6 @@ function ScrollToBottomComponent(props: any) {
   )
 };
 
-/*type CustomInputToolbarPropsType = {
-  props: any;
-}*/
-
-/*function CustomInputToolbar({ props }: CustomInputToolbarPropsType) {
-  const [value, setValue] = useState<string>("")
-  return (
-    <View style={Styles.textToolbarContainer} >
-      <View style={Styles.textContainer} >
-        <TextInput
-          {...props}
-          cursorColor={'#000'}
-          style={Styles.input}
-          placeholder='Type a Message'
-          />
-      </View>
-      <TouchableOpacity style={Styles.textToolbarIcon} >
-        <MaterialCommunityIcons name="send" size={25} color="white" />
-      </TouchableOpacity>
-    </View>
-  )
-};*/
-
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
   const [responseLoading, setResponseLoading] = useState(false)
@@ -120,7 +98,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       const userToken = await AsyncStorage.getItem('@user')
       if (userToken) {
         const storedToken = JSON.parse(userToken)
-        setToken(token)
+        setToken(storedToken)
         // get previous chats
         const chats: IChat[] = await getPreviousChats(storedToken)
         // append to messaged
@@ -135,24 +113,31 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
 
   // get response from bot
   async function getResponse(text:string) {
-    setResponseLoading(true)
-    /*if (token) {
+    if (token) {
+      setResponseLoading(true)
       const response = await generate(token, text)
-      if (Object.keys(response)[0] === 'result') {
-        const reply = {
+      // format the chat and append it to messages
+      if (typeof response !== 'object') {
+        let replyMessage: IMessage[] = [{
+          _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
+          text: response,
+          createdAt: new Date(),
           user: {
             _id: 2,
-            name: 'ChatGPT',
-          },
-          text: JSON.parse(response.result),
-        }
-        console.log(reply)
-        return reply
+            name: 'Bot',
+          }
+        }]
+        setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, replyMessage))
       } else {
-        ToastAndroid.show('An error occured while generating response', ToastAndroid.SHORT)
+        ToastAndroid.show(response.error, ToastAndroid.LONG)
       }
-    }*/
+      setResponseLoading(false)
+    } else {
+      ToastAndroid.show('An error occured', ToastAndroid.LONG)
+    }
+    setResponseLoading(false)
   }
+
   // format the chats
   function formatMessages(chats: IChat[]) {
     let formatedMessages: IMessage[] = []
@@ -199,52 +184,17 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   }
 
   useEffect(() => {
-    // getUserToken()
-    /*setMessages([
-      {
-        _id: 1,
-        text: 'Hello developer',
-        createdAt: new Date('2023-01-23T23:18:45.816Z'),
-        user: {
-          _id: 2,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 1000,
-        text: 'Hello developer',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-      {
-        _id: 1010,
-        text: 'Hello developerssss',
-        createdAt: new Date(),
-        user: {
-          _id: 1,
-          name: 'React Native',
-          avatar: 'https://placeimg.com/140/140/any',
-        },
-      },
-    ])*/
+    getUserToken()
     return () => {}
   }, [])
 
   const onSend = useCallback((messages: IMessage[]) => {
     setMessages(previousMessage => GiftedChat.append(previousMessage, messages))
-
-    // make request
-    /*const { text } = messages[0]
-    getResponse(text)*/
   }, [])
 
   return (
     <View style={{ flex: 1, paddingBottom: 20, }} >
+      <StatusBar style="auto" />
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', width: '100%', height: '100%', position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, zIndex:99, opacity: 0.4 }} >
           <ActivityIndicator color="white" />
@@ -253,7 +203,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         :
         <GiftedChat
           messages={messages}
-          onSend={messages => onSend(messages)}
+          // onSend={messages => onSend(messages)}
           user={{
             _id: 1
           }}
@@ -261,7 +211,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
           renderSend={RenderSend}
           scrollToBottom
           scrollToBottomComponent={ScrollToBottomComponent}
-          renderInputToolbar={() => CustomInputToolbar(userMessage, setUserMessage, setMessages, responseLoading, setResponseLoading)}
+          renderInputToolbar={() => CustomInputToolbar(userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse)}
         />
       }
     </View>
