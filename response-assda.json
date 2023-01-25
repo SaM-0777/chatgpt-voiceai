@@ -1,0 +1,29 @@
+[
+    {
+        "_id": "63cf15d5baf6ea8c7a31de65",
+        "createdAt": 2023-01-23T23:18:45.816Z,
+        "text": "What is best way to promote app",
+        "user": {
+            "_id": 1,
+            "name": "Me"
+        }
+    },
+    {
+        "_id": "63cf15d5baf6ea8c7a31de65bot",
+        "createdAt": 2023-01-23T23:18:45.816Z,
+        "text": "The best way to promote an app is to use a combination of marketing tactics. These can include social media, advertising, content marketing, influencer marketing, public relations, email marketing, and more. Additionally, consider creating an app store optimization (ASO) strategy to help your app get discovered in the app store. Finally, consider using user acquisition campaigns to help drive more downloads and increase your app’s visibility.",
+        "user": {
+            "_id": 2,
+            "name": "Bot"
+        }
+    },
+    {
+        "_id": "63cf15a08cbcca315ac84e3e",
+        "createdAt": 2023-01-23T23:17:52.094Z,
+        "text": "Hi",
+        "user": {
+            "_id": 1,
+            "name": "Me"
+        }
+    }
+]

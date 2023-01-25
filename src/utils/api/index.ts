@@ -94,6 +94,34 @@ export async function verify(token:string) {
     
 };
 
+export async function getPreviousChats(token: string) {
+    const url = `${Address}/api/user/chat`
+
+    const payload = {
+        token: token.toString(),
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+        })
+        const responseJson = await response.json()
+        // console.log("responseJson: ", responseJson)
+        if (response.status === 200) {
+            return responseJson.chats
+        } else {
+            return { error: "An error occurred while generating the responses." }
+        }
+    } catch (error) {
+        return { error: error }
+    }
+};
+
 export async function generate(token: string, message: string) {
     const url = `${Address}/api/user/generate`
 
@@ -112,7 +140,7 @@ export async function generate(token: string, message: string) {
             body: JSON.stringify(payload),
         })
         const responseJson = await response.json()
-        console.log("responseJson: ", responseJson)
+        // console.log("responseJson: ", responseJson)
         if (response.status === 200) {
             return { result: responseJson.result }
         } else {
@@ -121,5 +149,4 @@ export async function generate(token: string, message: string) {
     } catch (error) {
         return { error: "An error occured. Try again later." }
     }
-
-}
+};

@@ -1,4 +1,5 @@
 import { SignupHeader, LoginHeader, InputArea, PasswordInput } from "./AuthContainer";
+import { CustomInputToolbar } from "./ChatRoom";
 
 
 export {
@@ -8,4 +9,5 @@ export {
   InputArea,
   PasswordInput,
   //
+  CustomInputToolbar,
 }
