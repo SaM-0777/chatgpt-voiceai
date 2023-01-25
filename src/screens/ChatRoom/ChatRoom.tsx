@@ -1,10 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
 import { View, Text, ToastAndroid, TextInput, TouchableOpacity } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import * as Speech from 'expo-speech';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GiftedChat, Send, Bubble, IChatMessage, QuickReplies, User } from "react-native-gifted-chat";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
+import { MicrophoneModal } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
 import { generate, getPreviousChats } from "../../utils/api";
@@ -86,6 +88,7 @@ function ScrollToBottomComponent(props: any) {
 
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
+  const [isSpeaking, setIsSpeaking] = useState(false)
   const [responseLoading, setResponseLoading] = useState(false)
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
@@ -118,9 +121,12 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       const response = await generate(token, text)
       // format the chat and append it to messages
       if (typeof response !== 'object') {
+        let fResponse = response.trim()
+        let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
+        console.log(rResponse)
         let replyMessage: IMessage[] = [{
           _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
-          text: response,
+          text: fResponse,
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -128,6 +134,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
           }
         }]
         setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, replyMessage))
+        // speakResponse(rResponse)
       } else {
         ToastAndroid.show(response.error, ToastAndroid.LONG)
       }
@@ -135,7 +142,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     } else {
       ToastAndroid.show('An error occured', ToastAndroid.LONG)
     }
-    setResponseLoading(false)
+    // setResponseLoading(false)
   }
 
   // format the chats
@@ -185,8 +192,28 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
 
   useEffect(() => {
     getUserToken()
+    // speakResponse('Hi bro')
     return () => {}
   }, [])
+
+  function onStartSpeaking() { setIsSpeaking(true) }
+  function onEndSpeaking() { setIsSpeaking(false) }
+  function onStopSpeaking() {
+    Speech.stop()
+    setIsSpeaking(false)
+  }
+
+  // speak
+  async function speakResponse(text: string) {
+    Speech.speak(text, {
+      // voice: 'uk-UA-language',
+      language: 'en-US',
+      onStart: onStartSpeaking,
+      onDone: onEndSpeaking,
+      // onError: onError,
+      // onStopped: onEndSpeaking,
+    })
+  }
 
   const onSend = useCallback((messages: IMessage[]) => {
     setMessages(previousMessage => GiftedChat.append(previousMessage, messages))
@@ -201,18 +228,21 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         </View>
       )
         :
-        <GiftedChat
-          messages={messages}
-          // onSend={messages => onSend(messages)}
-          user={{
-            _id: 1
-          }}
-          renderBubble={MessageBubble}
-          renderSend={RenderSend}
-          scrollToBottom
-          scrollToBottomComponent={ScrollToBottomComponent}
-          renderInputToolbar={() => CustomInputToolbar(userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse)}
-        />
+        <>
+          {/*<MicrophoneModal />*/}
+          <GiftedChat
+            messages={messages}
+            // onSend={messages => onSend(messages)}
+            user={{
+              _id: 1
+            }}
+            renderBubble={MessageBubble}
+            renderSend={RenderSend}
+            scrollToBottom
+            scrollToBottomComponent={ScrollToBottomComponent}
+            renderInputToolbar={() => CustomInputToolbar(userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse, isSpeaking, onStopSpeaking)}
+          />
+        </>
       }
     </View>
   )

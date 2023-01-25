@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native';
+import LottieFiles from 'lottie-react-native';
 import { GiftedChat, IMessage } from 'react-native-gifted-chat';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -8,11 +9,14 @@ import { generate } from '../../utils/api';
 import { CustomInputToolbarStyle } from './Styles';
 
 
-export default function CustomInputToolbar(userMessage: string, setUserMessage: (text: string) => void, messages: IMessage[], setMessages: (messages: IMessage[] | ((previousMessage: IMessage[]) => IMessage[])) => void, responseLoading: boolean, setResponseLoading: (loadin: boolean) => void, getResponse: (value: string) => void) {
+export default function CustomInputToolbar(userMessage: string, setUserMessage: (text: string) => void, messages: IMessage[], setMessages: (messages: IMessage[] | ((previousMessage: IMessage[]) => IMessage[])) => void, responseLoading: boolean, setResponseLoading: (loadin: boolean) => void, getResponse: (value: string) => void, isSpeaking: boolean, onStopSpeaking: () => void) {
 
   async function onPress() {
+    // console.log(userMessage)
     if (userMessage && userMessage !== "") {
       setResponseLoading(true)
+      // reset the userMessage
+      setUserMessage("")
       let enteredMessage: IMessage[] = [{
         _id: Math.floor(Math.random() * (100000000 - 100000 + 1)) + 1,
         text: userMessage,
@@ -22,8 +26,6 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
           name: 'Me',
         }
       }]
-      // reset the userMessage
-      setUserMessage("")
       setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, enteredMessage))
       // post the chat
       getResponse(userMessage)
@@ -44,8 +46,8 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
           onChangeText={setUserMessage}
         />
       </View>
-      <TouchableOpacity activeOpacity={0.8} disabled={responseLoading} onPress={onPress} style={CustomInputToolbarStyle.textToolbarIcon} >
-        {userMessage === "" ?
+      <TouchableOpacity activeOpacity={0.8} disabled={responseLoading} onPress={isSpeaking ? onStopSpeaking : onPress} style={CustomInputToolbarStyle.textToolbarIcon} >
+        {/*{userMessage === "" ?
           <FontAwesome name="microphone" size={24} color="white" />
           :
           <>
@@ -55,6 +57,11 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
               <MaterialCommunityIcons name="send" size={25} color={"white"} />
             } 
           </>
+        }*/}
+        {isSpeaking ? 
+        <LottieFiles source={require('../../animations/speaking-white.json')} autoPlay loop />
+        :
+        <MaterialCommunityIcons name="send" size={25} color={"white"} />
         }
       </TouchableOpacity>
     </View>

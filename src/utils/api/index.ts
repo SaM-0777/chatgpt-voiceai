@@ -130,8 +130,6 @@ export async function generate(token: string, message: string) {
         message: message,
     }
 
-    console.log(token, message)
-
     try {
         const response = await fetch(url, {
             method: 'POST',
