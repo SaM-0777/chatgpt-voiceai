@@ -131,6 +131,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
           user: {
             _id: 2,
             name: 'Bot',
+            avatar: require("../../../assets/images/bot-280.jpg"),
           }
         }]
         setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, replyMessage))
@@ -166,6 +167,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         user: {
           _id: "",
           name: "",
+          avatar: require("../../../assets/images/bot-280.jpg"),
         },
       }
 
@@ -220,7 +222,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   }, [])
 
   return (
-    <View style={{ flex: 1, paddingBottom: 20, }} >
+    <View style={{ flex: 1, paddingBottom: 20 }} >
       <StatusBar style="auto" />
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', width: '100%', height: '100%', position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, zIndex:99, opacity: 0.4 }} >
