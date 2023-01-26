@@ -1,14 +1,13 @@
 {
   "expo": {
-    "name": "voiceai",
+    "name": "Voice Ai",
     "slug": "voiceai",
     "version": "1.0.0",
     "orientation": "portrait",
-    "scheme": "com.relm.voiceai",
-    "icon": "./assets/icon.png",
+    "scheme": "com.realm.voiceai",
+    "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,12 +18,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "bundleidentifier": "com.relm.voiceai",
-      "bundleIdentifier": "com.relm.voiceai"
+      "supportsTablet": true
     },
     "android": {
-      "package": "com.relm.voiceai",
+      "package": "com.realm.voiceai",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",

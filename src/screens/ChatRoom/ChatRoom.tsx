@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { View, Text, ToastAndroid, TextInput, TouchableOpacity } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import * as Speech from 'expo-speech';
+import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GiftedChat, Send, Bubble, IChatMessage, QuickReplies, User } from "react-native-gifted-chat";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
@@ -82,7 +83,9 @@ function MessageBubble(props: any) {
 
 function ScrollToBottomComponent(props: any) {
   return (
-    <MaterialIcons name="keyboard-arrow-down" size={20} color="black" />
+    <View {...props} >
+      <MaterialIcons name="keyboard-arrow-down" size={20} color="black" />
+    </View>
   )
 };
 
@@ -123,7 +126,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       if (typeof response !== 'object') {
         let fResponse = response.trim()
         let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
-        console.log(rResponse)
+        // console.log(rResponse)
         let replyMessage: IMessage[] = [{
           _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
           text: fResponse,
@@ -136,11 +139,13 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         }]
         setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, replyMessage))
         // speakResponse(rResponse)
+        setResponseLoading(false)
       } else {
+        setResponseLoading(false)
         ToastAndroid.show(response.error, ToastAndroid.LONG)
       }
-      setResponseLoading(false)
     } else {
+      setResponseLoading(false)
       ToastAndroid.show('An error occured', ToastAndroid.LONG)
     }
     // setResponseLoading(false)
@@ -217,6 +222,20 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     })
   }
 
+  function onLongPress(context: any, message: any) {
+    // console.log(context, message);
+    const options = ['copy', 'Cancel'];
+    const cancelButtonIndex = options.length - 1;
+    context.actionSheet().showActionSheetWithOptions({ options, cancelButtonIndex },
+      (buttonIndex: number) => {
+        switch (buttonIndex) {
+          case 0:
+            Clipboard.setStringAsync(message.text);
+            break;
+        }
+    });
+  }
+
   const onSend = useCallback((messages: IMessage[]) => {
     setMessages(previousMessage => GiftedChat.append(previousMessage, messages))
   }, [])
@@ -233,6 +252,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         <>
           {/*<MicrophoneModal />*/}
           <GiftedChat
+            onLongPress={onLongPress}
             messages={messages}
             // onSend={messages => onSend(messages)}
             user={{
