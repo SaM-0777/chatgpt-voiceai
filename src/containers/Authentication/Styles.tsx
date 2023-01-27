@@ -161,7 +161,37 @@ export const loginStyles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 30,
   },
+  forgotPasswordContainer: {
+    alignSelf: 'flex-start',
+  },
+  forgotText: {
+    fontSize: 14,
+    fontFamily: "PoppinsRegular",
+    marginVertical: 10,
+    textDecorationLine: 'underline',
+  },
 });
 
 
+export const forgotPasswordStyles = StyleSheet.create({
+  container: {
+    width: '100%',
+    flex: 1,
+    alignItems: 'center',
+  },
+  btnContainer: {
+    width: 200,
+    height: 60,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 100,
+    marginVertical: 30,
+    backgroundColor: AppStyles.DarkColor,
+  },
+  logintext: {
+    color: '#FFF',
+    fontFamily: "PoppinsBold",
+    fontSize: 20,
+  },
+});
 

@@ -94,6 +94,59 @@ export async function verify(token:string) {
     
 };
 
+export async function forgot(email:string) {
+    const url = `${Address}/api/auth/forgot`
+
+    const payload = {
+        email: email
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+        })
+        const responseJson = await response.json()
+        return responseJson.message
+    } catch (error) {
+        return error
+    }
+};
+
+export async function change(email:string, token: string) {
+    const url = `${Address}/api/auth/change`
+
+    const payload = {
+        email: email,
+        token: token,
+    }
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(payload),
+        })
+        const responseJson = await response.json()
+        if (response.status === 200) {
+            return responseJson.success
+        } else {
+            console.log(responseJson);
+            
+            return responseJson.error
+        }
+    } catch (error) {
+        return "An error occured try again later"
+    }
+};
+
 export async function getPreviousChats(token: string) {
     const url = `${Address}/api/user/chat`
 

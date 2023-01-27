@@ -24,10 +24,14 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
     }
   }
 
+  function navigateToChangePassword() {
+    navigation.navigate('change-password')
+  }
+
   return (
     <View style={Styles.container} >
       <View style={Styles.wrapper} >
-        <TouchableOpacity activeOpacity={0.85} style={Styles.btn} >
+        <TouchableOpacity onPress={navigateToChangePassword} activeOpacity={0.85} style={Styles.btn} >
           <Octicons name="person" size={24} color="black" />
           <Text style={Styles.btnText} >Change Password</Text>
         </TouchableOpacity>

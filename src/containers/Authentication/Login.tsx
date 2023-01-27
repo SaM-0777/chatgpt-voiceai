@@ -15,6 +15,7 @@ type LoginPropsType = {
   setUser: (token: string) => void;
   loading: boolean;
   setLoading: (state: boolean) => void;
+  setForgotPassword: (state: boolean) => void;
 };
 
 type LoginType = {
@@ -22,7 +23,7 @@ type LoginType = {
   password: string;
 };
 
-export default function Login({ setUser, loading, setLoading }: LoginPropsType) {
+export default function Login({ setUser, loading, setLoading, setForgotPassword }: LoginPropsType) {
   const [loginInfo, setLoginInfo] = useState<LoginType>({email: "", password: ""})
 
   async function onLogin() {
@@ -37,6 +38,10 @@ export default function Login({ setUser, loading, setLoading }: LoginPropsType) 
     setLoading(false)
   }
 
+  function onPressForgot() {
+    setForgotPassword(true)
+  }
+
   async function googleSignIn() {
     
   }
@@ -49,6 +54,9 @@ export default function Login({ setUser, loading, setLoading }: LoginPropsType) 
       <LoginHeader />
       <InputArea inputFor='email' text={loginInfo!} setText={setLoginInfo} />
       <PasswordInput inputFor='password' text={loginInfo!} setText={setLoginInfo} />
+      <TouchableOpacity disabled={loading} activeOpacity={0.95} onPress={onPressForgot} style={loginStyles.forgotPasswordContainer} >
+        <Text style={loginStyles.forgotText} >Forgot Password?</Text>
+      </TouchableOpacity>
       <TouchableOpacity disabled={loading} activeOpacity={0.95} onPress={onLogin} style={loginStyles.loginBtnContainer} >
         {!loading ? <Text style={loginStyles.logintext} >Login</Text> : <ActivityIndicator color={'#FFF'} />}
       </TouchableOpacity>

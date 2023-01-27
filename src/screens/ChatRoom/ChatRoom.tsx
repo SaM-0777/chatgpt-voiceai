@@ -244,8 +244,12 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     <View style={{ flex: 1, paddingBottom: 20 }} >
       <StatusBar style="auto" />
       {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', width: '100%', height: '100%', position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, zIndex:99, opacity: 0.4 }} >
-          <ActivityIndicator color="white" />
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }} >
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', width: '100%', height: '100%', position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, opacity: 0.4  }} />
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
+            <ActivityIndicator color="white" size={"small"} />
+            <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
+          </View>
         </View>
       )
         :

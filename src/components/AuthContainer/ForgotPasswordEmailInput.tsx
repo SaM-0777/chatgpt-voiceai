@@ -6,22 +6,17 @@ import Styles from '../../AppStyles';
 import { inputAreaStyles } from './Styles';
 
 
-type accountInfoType = {
-  email: string;
-  password: string;
-};
-
 type InputAreaPropsType = {
-  inputFor: string;
-  text: accountInfoType;
-  setText: (accountInfo: accountInfoType) => void;
+  // inputFor: string;
+  // text: string;
+  setText: (email: string) => void;
 };
 
-export default function InputArea({ inputFor, text, setText }: InputAreaPropsType) {
+export default function ForgotPasswordEmailInput({ setText }: InputAreaPropsType) {
   const [value, setValue] = useState<string>()
 
   function handleChangeText(t:string) {
-    setText({...text, [inputFor]: t})
+    setText(t)
   }
 
   return (
