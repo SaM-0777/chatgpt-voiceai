@@ -138,7 +138,7 @@ export async function change(email:string, token: string) {
         if (response.status === 200) {
             return responseJson.success
         } else {
-            console.log(responseJson);
+            // console.log(responseJson);
             
             return responseJson.error
         }
