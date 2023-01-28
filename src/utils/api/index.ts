@@ -1,4 +1,4 @@
-const Address = "https://beautiful-tan-frog.cyclic.app"
+const Address = "https://voiceai.cyclic.app/"
 
 
 export async function register(email:string, password:string) {
