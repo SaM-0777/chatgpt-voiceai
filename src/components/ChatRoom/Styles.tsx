@@ -31,7 +31,6 @@ export const CustomInputToolbarStyle = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         borderRadius: 1000,
-        backgroundColor: '#0084D0',
     },
     input: {
         width: '100%',

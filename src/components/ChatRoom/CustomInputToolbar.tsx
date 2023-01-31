@@ -46,7 +46,12 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
           onChangeText={setUserMessage}
         />
       </View>
-      <TouchableOpacity activeOpacity={0.8} disabled={responseLoading} onPress={isSpeaking ? onStopSpeaking : onPress} style={CustomInputToolbarStyle.textToolbarIcon} >
+      <TouchableOpacity activeOpacity={0.8} disabled={responseLoading} onPress={isSpeaking ? onStopSpeaking : onPress} style={[CustomInputToolbarStyle.textToolbarIcon, responseLoading ? { backgroundColor: '#62BFF4' } : { backgroundColor: '#0084D0', }]} >
+        {responseLoading ?
+          <ActivityIndicator size={'small'} color='white' />
+          :
+          <MaterialCommunityIcons name="send" size={25} color={"white"} />
+        }
         {/*{userMessage === "" ?
           <FontAwesome name="microphone" size={24} color="white" />
           :
@@ -55,14 +60,14 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
               <ActivityIndicator size={'small'} color='white' />
               :
               <MaterialCommunityIcons name="send" size={25} color={"white"} />
-            } 
+            }
           </>
         }*/}
-        {isSpeaking ? 
+        {/*{isSpeaking ? 
         <LottieFiles source={require('../../animations/speaking-white.json')} autoPlay loop />
         :
         <MaterialCommunityIcons name="send" size={25} color={"white"} />
-        }
+        }*/}
       </TouchableOpacity>
     </View>
   )
