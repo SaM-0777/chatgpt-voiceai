@@ -18,7 +18,7 @@ export default function CustomInputToolbar(userMessage: string, setUserMessage: 
       // reset the userMessage
       setUserMessage("")
       let enteredMessage: IMessage[] = [{
-        _id: Math.floor(Math.random() * (100000000 - 100000 + 1)) + 1,
+        _id: Math.floor(Math.random() * (1000000 - 1000 + 1)) + 1,
         text: userMessage,
         createdAt: new Date(),
         user: {
