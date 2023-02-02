@@ -3,15 +3,16 @@ import { Dimensions, StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
+    ...StyleSheet.absoluteFillObject,
     flex: 1,
-    // position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 999999999999,
+    zIndex: 9999,
   },
   mask: {
     position: 'absolute',
-    flex: 1,
+    alignSelf: 'center',
+    // flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
     backgroundColor: '#000',
@@ -20,7 +21,7 @@ export default StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    zIndex: 999999999999,
+    zIndex: 9999,
   },
   modal: {
     position: 'absolute',
@@ -29,7 +30,7 @@ export default StyleSheet.create({
     height: 400,
     borderRadius: 15,
     backgroundColor: '#FFF',
-    zIndex: 999999999999,
+    zIndex: 9999,
   },
 });
 

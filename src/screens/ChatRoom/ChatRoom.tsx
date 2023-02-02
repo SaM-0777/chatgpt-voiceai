@@ -2,12 +2,13 @@ import { useState, useCallback, useEffect } from "react";
 import { View, Text, ToastAndroid, TextInput, TouchableOpacity } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import * as Speech from 'expo-speech';
+// import Voice from "@react-native-voice/voice";
 import * as Clipboard from 'expo-clipboard';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GiftedChat, Send, Bubble, IChatMessage, QuickReplies, User } from "react-native-gifted-chat";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
-import { MicrophoneModal } from "../../containers";
+// import { MicrophoneModal } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
 import { generate, getPreviousChats } from "../../utils/api";
@@ -61,7 +62,7 @@ function MessageBubble(props: any) {
       {...props}
       wrapperStyle={{
         right: {
-
+          backgroundColor: AppStyles.GrayColor3,
         },
         left: {
           backgroundColor: '#FFF'
@@ -69,7 +70,7 @@ function MessageBubble(props: any) {
       }}
       textStyle={{
         right: {
-          color: '#FFF',
+          color: AppStyles.DarkColor,
           fontFamily: "PoppinsRegular",
         },
         left: {
@@ -97,6 +98,8 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
+  /*const [voiceRecordingStarted, setVoiceRecordingStarted] = useState<boolean>(false)
+  const [speechToTextResult, setSpeechToTextResult] = useState<any[]>([])*/
 
   // get user access-token and previous chats
   async function getUserToken() {
@@ -211,6 +214,40 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     setIsSpeaking(false)
   }
 
+  // voice started
+  /*async function startTextToSpeech() {
+    try {
+      await Voice.start("en-US")
+      setVoiceRecordingStarted(true)
+    } catch (error) {
+      console.log("start error: ", error)
+    }
+  }
+  async function stopTextToSpeech() {
+    try {
+      await Voice.stop()
+      setVoiceRecordingStarted(false)
+    } catch (error) {
+      console.log("stop error: ", error)
+    }
+  }
+  async function textToSpeechError(error: any) {
+    console.log("error: ", error);
+  }
+  async function textToSpeechResult(result: any) {
+    console.log("value: ", result.value)
+    // setSpeechToTextResult(result.value)
+  }
+  useEffect(() => {
+    Voice.onSpeechStart = startTextToSpeech
+    Voice.onSpeechEnd = stopTextToSpeech
+    Voice.onSpeechError = textToSpeechError
+    Voice.onSpeechResults = textToSpeechResult
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners)
+    }
+  }, [])*/
+
   // speak
   async function speakResponse(text: string) {
     Speech.speak(text, {
@@ -255,7 +292,9 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       )
         :
         <>
-          {isMicrophoneModal && <MicrophoneModal setMicrophoneModal={setMicrophoneModal} />}
+          {/*{isMicrophoneModal && (
+            <MicrophoneModal setMicrophoneModal={setMicrophoneModal} />
+          )}*/}
           <GiftedChat
             onLongPress={onLongPress}
             messages={messages}
@@ -267,7 +306,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
             renderSend={RenderSend}
             scrollToBottom
             scrollToBottomComponent={ScrollToBottomComponent}
-            renderInputToolbar={() => <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} isMicrophoneModal={isMicrophoneModal} setMicrophoneModal={setMicrophoneModal} isSpeaking={isSpeaking} onStopSpeaking={onStopSpeaking} />}
+            renderInputToolbar={() => <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} isMicrophoneModal={isMicrophoneModal} setMicrophoneModal={setMicrophoneModal} startTextToSpeech={() => {}} stopTextToSpeech={() => {}} isSpeaking={isSpeaking} onStopSpeaking={onStopSpeaking} />}
           />
         </>
       }

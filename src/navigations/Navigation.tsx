@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { PortalHost } from '@gorhom/portal';
 
 import { Home, ChatRoom, Settings, ChangePassword } from '../screens';
 
@@ -17,6 +18,7 @@ export default function Navigation() {
         <Stack.Screen name='settings' component={Settings} />
         <Stack.Screen name='change-password' component={ChangePassword} />
       </Stack.Navigator>
+      <PortalHost name='microphone-modal' />
     </NavigationContainer>
   )
 };

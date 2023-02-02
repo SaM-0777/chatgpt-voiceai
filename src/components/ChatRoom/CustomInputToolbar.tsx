@@ -19,12 +19,13 @@ type CustomInputToolbarPropsType = {
   getResponse: (value: string) => void,
   isMicrophoneModal: boolean,
   setMicrophoneModal: (value: boolean) => void,
+  startTextToSpeech: () => void;
+  stopTextToSpeech: () => void;
   isSpeaking: boolean,
   onStopSpeaking: () => void,
 }
 
-export default function CustomInputToolbar({userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse, isMicrophoneModal, setMicrophoneModal, isSpeaking, onStopSpeaking}: CustomInputToolbarPropsType) {
-  const [isPressedOut, setIsPressedOut] = useState<boolean>(false)
+export default function CustomInputToolbar({userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse, isMicrophoneModal, setMicrophoneModal, startTextToSpeech, stopTextToSpeech, isSpeaking, onStopSpeaking}: CustomInputToolbarPropsType) {
 
   function openMicrophoneModal() {
     setMicrophoneModal(true)
@@ -34,14 +35,18 @@ export default function CustomInputToolbar({userMessage, setUserMessage, message
   }
 
   function onLongPress() {
-    if (!isMicrophoneModal && userMessage === "") openMicrophoneModal()
+    /*if (!isMicrophoneModal && userMessage === "") {
+      openMicrophoneModal()
+      // startTextToSpeech()
+    }*/
     // console.log("Long presssed")
   }
 
   function onPressIn() { console.log("In") }
   function onPressOut() {
-    setIsPressedOut(true)
-    console.log("Out")
+    // closeMicrophoneModal()
+    // stopTextToSpeech()
+    // console.log("Out")
   }
 
   async function onPress() {
@@ -80,17 +85,11 @@ export default function CustomInputToolbar({userMessage, setUserMessage, message
           onChangeText={setUserMessage}
         />
       </View>
-      <TouchableOpacity activeOpacity={0.8} disabled={responseLoading} onPress={onPress} onLongPress={onLongPress} style={[CustomInputToolbarStyle.textToolbarIcon, responseLoading ? { backgroundColor: '#62BFF4' } : { backgroundColor: '#0084D0', }]} >
+      <TouchableOpacity activeOpacity={1} disabled={responseLoading} onPress={onPress} style={[CustomInputToolbarStyle.textToolbarIcon, responseLoading ? { backgroundColor: '#DDDADA' } : { backgroundColor: '#1D1617', }]} >
         {responseLoading ?
           <ActivityIndicator size={'small'} color='white' />
           :
-          <>
-            { userMessage === "" ? 
-              <FontAwesome name="microphone" size={24} color="white" />
-              :
-              <MaterialCommunityIcons name="send" size={25} color={"white"} />
-            }
-          </>
+          <MaterialCommunityIcons name="send" size={25} color={"white"} />
         }
         {/*{userMessage === "" ?
           <FontAwesome name="microphone" size={24} color="white" />

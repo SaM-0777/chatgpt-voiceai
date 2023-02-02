@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ask AI",
     "slug": "askai",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "orientation": "portrait",
     "scheme": "com.realm.askai",
     "icon": "./assets/images/icon.png",
@@ -21,30 +21,24 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 4,
+      "versionCode": 5,
       "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "93467a23-c925-4aae-aa18-71035f03d915"
+        "projectId": "703fb0db-170b-442c-8b86-5d5bed02c99d"
       }
-    },
-    "plugins": [
-      [
-        "@react-native-voice/voice",
-        {
-          "microphonePermission": "Allow Ask AI to access the microphone",
-          "speechRecognitionPermission": "Allow Ask AI to securely recognize user speech"
-        }
-      ]
-    ]
+    }
   }
 }
