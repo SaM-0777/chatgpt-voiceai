@@ -1,15 +1,15 @@
 {
   "expo": {
-    "name": "Voice Ai",
-    "slug": "voiceai",
-    "version": "1.1.0",
+    "name": "Ask AI",
+    "slug": "askai",
+    "version": "1.1.1",
     "orientation": "portrait",
-    "scheme": "com.realm.voiceai",
+    "scheme": "com.realm.askai",
     "icon": "./assets/images/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#FFFFFF"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,11 +21,11 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 3,
-      "package": "com.realm.voiceai",
+      "versionCode": 4,
+      "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#FFFFFF"
       }
     },
@@ -36,6 +36,15 @@
       "eas": {
         "projectId": "93467a23-c925-4aae-aa18-71035f03d915"
       }
-    }
+    },
+    "plugins": [
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "Allow Ask AI to access the microphone",
+          "speechRecognitionPermission": "Allow Ask AI to securely recognize user speech"
+        }
+      ]
+    ]
   }
 }

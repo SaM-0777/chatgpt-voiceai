@@ -93,6 +93,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [responseLoading, setResponseLoading] = useState(false)
+  const [isMicrophoneModal, setMicrophoneModal] = useState(false)
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
@@ -254,7 +255,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       )
         :
         <>
-          {/*<MicrophoneModal />*/}
+          {isMicrophoneModal && <MicrophoneModal setMicrophoneModal={setMicrophoneModal} />}
           <GiftedChat
             onLongPress={onLongPress}
             messages={messages}
@@ -266,7 +267,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
             renderSend={RenderSend}
             scrollToBottom
             scrollToBottomComponent={ScrollToBottomComponent}
-            renderInputToolbar={() => CustomInputToolbar(userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse, isSpeaking, onStopSpeaking)}
+            renderInputToolbar={() => <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} isMicrophoneModal={isMicrophoneModal} setMicrophoneModal={setMicrophoneModal} isSpeaking={isSpeaking} onStopSpeaking={onStopSpeaking} />}
           />
         </>
       }

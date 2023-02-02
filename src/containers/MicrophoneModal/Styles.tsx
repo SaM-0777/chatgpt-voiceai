@@ -4,10 +4,10 @@ import { Dimensions, StyleSheet } from 'react-native';
 export default StyleSheet.create({
   container: {
     flex: 1,
-    position: 'relative',
+    // position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 9999999,
+    zIndex: 999999999999,
   },
   mask: {
     position: 'absolute',
@@ -20,7 +20,7 @@ export default StyleSheet.create({
     right: 0,
     left: 0,
     bottom: 0,
-    zIndex: 999999,
+    zIndex: 999999999999,
   },
   modal: {
     position: 'absolute',
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     height: 400,
     borderRadius: 15,
     backgroundColor: '#FFF',
-    zIndex: 9999999,
+    zIndex: 999999999999,
   },
 });
 
