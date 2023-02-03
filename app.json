@@ -5,7 +5,7 @@
     "version": "1.2.0",
     "orientation": "portrait",
     "scheme": "com.realm.askai",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/icon-ps.png",
     "userInterfaceStyle": "light",
     "splash": {
       "resizeMode": "contain",
@@ -25,12 +25,9 @@
       "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/icon-ps.png",
         "backgroundColor": "#FFFFFF"
-      },
-      "permissions": [
-        "android.permission.RECORD_AUDIO"
-      ]
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
