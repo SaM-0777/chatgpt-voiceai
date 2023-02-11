@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { View, TouchableOpacity, Text, } from 'react-native';
 import { FullWindowOverlay } from 'react-native-screens';
 import LottieFiles from 'lottie-react-native';
-import { Portal } from '@gorhom/portal';
 
 import Styles from './Styles';
 
@@ -42,14 +41,12 @@ export default function MicrophoneModal({ setMicrophoneModal }: MicrophoneModalP
   }
   
   return (
-    <Portal >
-      <View style={Styles.container} >
-        <TouchableOpacity activeOpacity={0.4} onPress={onPressMask} style={Styles.mask} />
-        <View style={Styles.modal} >
-          <LottieFiles source={require('../../animations/listening.json')} speed={1} autoPlay loop />
-        </View>
+    <View style={Styles.container} >
+      <TouchableOpacity activeOpacity={0.4} onPress={onPressMask} style={Styles.mask} />
+      <View style={Styles.modal} >
+        <LottieFiles source={require('../../animations/listening.json')} speed={1} autoPlay loop />
       </View>
-    </Portal>
+    </View>
   )
 };
 

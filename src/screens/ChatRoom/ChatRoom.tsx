@@ -1,26 +1,32 @@
-import { useState, useCallback, useEffect } from "react";
-import { View, Text, ToastAndroid, TextInput, TouchableOpacity } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { useState, useEffect } from "react";
+import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
-import * as Speech from 'expo-speech';
-// import Voice from "@react-native-voice/voice";
-import * as Clipboard from 'expo-clipboard';
+import { FlashList } from "@shopify/flash-list";
+import { GiftedChat } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { GiftedChat, Send, Bubble, IChatMessage, QuickReplies, User } from "react-native-gifted-chat";
-import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 
 // import { MicrophoneModal } from "../../containers";
+import { Message } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
 import { generate, getPreviousChats } from "../../utils/api";
 
 import AppStyles from "../../AppStyles";
 import Styles from './Styles';
-import { StatusBar } from "expo-status-bar";
 
 
 type ChatRoomPropsType = {
   navigation: any;
   route: any;
+};
+
+export interface User {
+  _id: string | number;
+  name?: string;
+  avatar?: string | number;
 };
 
 export interface IMessage {
@@ -35,7 +41,6 @@ export interface IMessage {
   sent?: boolean
   received?: boolean
   pending?: boolean
-  quickReplies?: QuickReplies
 };
 
 export interface IChat {
@@ -46,60 +51,13 @@ export interface IChat {
   createdAt: string | Date;
 };
 
-function RenderSend(props: any) {
-  return(
-    <Send {...props} >
-      <View style={{ marginRight: 5 }} >
-        <MaterialCommunityIcons name="send" size={25} color="black" />
-      </View>
-    </Send>
-  )
-};
-
-function MessageBubble(props: any) {
-  return (
-    <Bubble
-      {...props}
-      wrapperStyle={{
-        right: {
-          backgroundColor: AppStyles.GrayColor3,
-        },
-        left: {
-          backgroundColor: '#FFF'
-        },
-      }}
-      textStyle={{
-        right: {
-          color: AppStyles.DarkColor,
-          fontFamily: "PoppinsRegular",
-        },
-        left: {
-          color: AppStyles.DarkColor,
-          fontFamily: "PoppinsRegular",
-        },
-      }}
-    />
-  )
-};
-
-function ScrollToBottomComponent(props: any) {
-  return (
-    <View {...props} >
-      <MaterialIcons name="keyboard-arrow-down" size={20} color="black" />
-    </View>
-  )
-};
 
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
-  const [isSpeaking, setIsSpeaking] = useState(false)
   const [responseLoading, setResponseLoading] = useState(false)
-  const [isMicrophoneModal, setMicrophoneModal] = useState(false)
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
-  /*const [voiceRecordingStarted, setVoiceRecordingStarted] = useState<boolean>(false)
-  const [speechToTextResult, setSpeechToTextResult] = useState<any[]>([])*/
 
   // get user access-token and previous chats
   async function getUserToken() {
@@ -110,9 +68,13 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         const storedToken = JSON.parse(userToken)
         setToken(storedToken)
         // get previous chats
-        const chats: IChat[] = await getPreviousChats(storedToken)
-        // append to messaged
-        formatMessages(chats)
+        try {
+          const chats: IChat[] = await getPreviousChats(storedToken)
+          // append to messages
+          formatMessages(chats)
+        } catch (error) {
+          ToastAndroid.show('An error occured. Try again later', ToastAndroid.LONG)
+        }
       } 
       setLoading(false)
     } catch (error) {
@@ -138,7 +100,6 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
           user: {
             _id: 2,
             name: 'Bot',
-            avatar: require("../../../assets/images/bot-280.jpg"),
           }
         }]
         setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, replyMessage))
@@ -207,110 +168,35 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     return () => {}
   }, [])
 
-  function onStartSpeaking() { setIsSpeaking(true) }
-  function onEndSpeaking() { setIsSpeaking(false) }
-  function onStopSpeaking() {
-    Speech.stop()
-    setIsSpeaking(false)
-  }
-
-  // voice started
-  /*async function startTextToSpeech() {
-    try {
-      await Voice.start("en-US")
-      setVoiceRecordingStarted(true)
-    } catch (error) {
-      console.log("start error: ", error)
-    }
-  }
-  async function stopTextToSpeech() {
-    try {
-      await Voice.stop()
-      setVoiceRecordingStarted(false)
-    } catch (error) {
-      console.log("stop error: ", error)
-    }
-  }
-  async function textToSpeechError(error: any) {
-    console.log("error: ", error);
-  }
-  async function textToSpeechResult(result: any) {
-    console.log("value: ", result.value)
-    // setSpeechToTextResult(result.value)
-  }
-  useEffect(() => {
-    Voice.onSpeechStart = startTextToSpeech
-    Voice.onSpeechEnd = stopTextToSpeech
-    Voice.onSpeechError = textToSpeechError
-    Voice.onSpeechResults = textToSpeechResult
-    return () => {
-      Voice.destroy().then(Voice.removeAllListeners)
-    }
-  }, [])*/
-
-  // speak
-  async function speakResponse(text: string) {
-    Speech.speak(text, {
-      // voice: 'uk-UA-language',
-      language: 'en-US',
-      onStart: onStartSpeaking,
-      onDone: onEndSpeaking,
-      // onError: onError,
-      // onStopped: onEndSpeaking,
-    })
-  }
-
-  function onLongPress(context: any, message: any) {
-    // console.log(context, message);
-    const options = ['copy', 'Cancel'];
-    const cancelButtonIndex = options.length - 1;
-    context.actionSheet().showActionSheetWithOptions({ options, cancelButtonIndex },
-      (buttonIndex: number) => {
-        switch (buttonIndex) {
-          case 0:
-            Clipboard.setStringAsync(message.text);
-            break;
-        }
-    });
-  }
-
-  const onSend = useCallback((messages: IMessage[]) => {
-    setMessages(previousMessage => GiftedChat.append(previousMessage, messages))
-  }, [])
-
   return (
-    <View style={{ flex: 1, paddingBottom: 20 }} >
-      <StatusBar style="auto" />
-      {loading ? (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }} >
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#000', width: '100%', height: '100%', position: 'absolute', top: 0, right: 0, left: 0, bottom: 0, opacity: 0.4  }} />
-          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
-            <ActivityIndicator color="white" size={"small"} />
-            <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
-          </View>
-        </View>
-      )
-        :
-        <>
-          {/*{isMicrophoneModal && (
-            <MicrophoneModal setMicrophoneModal={setMicrophoneModal} />
-          )}*/}
-          <GiftedChat
-            onLongPress={onLongPress}
-            messages={messages}
-            // onSend={messages => onSend(messages)}
-            user={{
-              _id: 1
-            }}
-            renderBubble={MessageBubble}
-            renderSend={RenderSend}
-            scrollToBottom
-            scrollToBottomComponent={ScrollToBottomComponent}
-            renderInputToolbar={() => <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} isMicrophoneModal={isMicrophoneModal} setMicrophoneModal={setMicrophoneModal} startTextToSpeech={() => {}} stopTextToSpeech={() => {}} isSpeaking={isSpeaking} onStopSpeaking={onStopSpeaking} />}
-          />
-        </>
-      }
-    </View>
+    <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
+      <StatusBar style="auto" backgroundColor="#FFFFFF" />
+      <KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }} resetScrollToCoords={{ x: 0, y: 100 }} enableOnAndroid={true} scrollEnabled={false} keyboardShouldPersistTaps="handled" >
+          {loading ? (
+              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
+                  <ActivityIndicator color="white" size={"small"} />
+                  <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
+                </View>
+              </View>
+            )
+            :
+            <>
+              <View style={{ flex: 1 }} >
+                <FlashList
+                  data={messages}
+                  renderItem={({ item }) => <Message message={item} />}
+                  inverted
+                  estimatedItemSize={850}
+                />
+                <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} />
+              </View>
+            </>
+          }
+          {/*<KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1, }} nestedScrollEnabled extraScrollHeight={120} showsVerticalScrollIndicator={false} enableOnAndroid={true} >
+          </KeyboardAwareScrollView>*/}
+      </KeyboardAwareScrollView>
+          </SafeAreaView>
   )
 };
 

@@ -1,61 +1,49 @@
-import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator } from 'react-native';
-import LottieFiles from 'lottie-react-native';
-import { GiftedChat, IMessage } from 'react-native-gifted-chat';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, } from 'react-native';
+import LottieView from 'lottie-react-native';
+import { GiftedChat } from 'react-native-gifted-chat';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
-import { generate } from '../../utils/api';
-
 import { CustomInputToolbarStyle } from './Styles';
+import AppStyles from '../../AppStyles';
 
+
+export interface User {
+  _id: string | number;
+  name?: string;
+  avatar?: string | number;
+};
+
+export interface IMessage {
+  _id: string | number
+  text: string
+  createdAt: Date | number
+  user: User
+  image?: string
+  video?: string
+  audio?: string
+  system?: boolean
+  sent?: boolean
+  received?: boolean
+  pending?: boolean
+};
 
 type CustomInputToolbarPropsType = {
   userMessage: string,
   setUserMessage: (text: string) => void,
   messages: IMessage[],
+  responseLoading: boolean;
+  setResponseLoading: (loading: boolean) => void;
   setMessages: (messages: IMessage[] | ((previousMessage: IMessage[]) => IMessage[])) => void,
-  responseLoading: boolean,
-  setResponseLoading: (loading: boolean) => void,
   getResponse: (value: string) => void,
-  isMicrophoneModal: boolean,
-  setMicrophoneModal: (value: boolean) => void,
-  startTextToSpeech: () => void;
-  stopTextToSpeech: () => void;
-  isSpeaking: boolean,
-  onStopSpeaking: () => void,
 }
 
-export default function CustomInputToolbar({userMessage, setUserMessage, messages, setMessages, responseLoading, setResponseLoading, getResponse, isMicrophoneModal, setMicrophoneModal, startTextToSpeech, stopTextToSpeech, isSpeaking, onStopSpeaking}: CustomInputToolbarPropsType) {
-
-  function openMicrophoneModal() {
-    setMicrophoneModal(true)
-  }
-  function closeMicrophoneModal() {
-    setMicrophoneModal(false)
-  }
-
-  function onLongPress() {
-    /*if (!isMicrophoneModal && userMessage === "") {
-      openMicrophoneModal()
-      // startTextToSpeech()
-    }*/
-    // console.log("Long presssed")
-  }
-
-  function onPressIn() { console.log("In") }
-  function onPressOut() {
-    // closeMicrophoneModal()
-    // stopTextToSpeech()
-    // console.log("Out")
-  }
-
+export default function CustomInputToolbar({userMessage, setUserMessage, messages, responseLoading, setResponseLoading, setMessages, getResponse}: CustomInputToolbarPropsType) {
   async function onPress() {
     // if (!isPressedOut) console.log("Pressed")
     // console.log(userMessage)
     if (userMessage && userMessage !== "") {
       setResponseLoading(true)
-      // reset the userMessage
-      setUserMessage("")
       let enteredMessage: IMessage[] = [{
         _id: Math.floor(Math.random() * (1000000 - 1000 + 1)) + 1,
         text: userMessage,
@@ -66,6 +54,8 @@ export default function CustomInputToolbar({userMessage, setUserMessage, message
         }
       }]
       setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, enteredMessage))
+      // reset the userMessage
+      setUserMessage("")
       // post the chat
       getResponse(userMessage)
       // setResponseLoading(false)
@@ -83,31 +73,23 @@ export default function CustomInputToolbar({userMessage, setUserMessage, message
           placeholder='Type a Message'
           value={userMessage}
           onChangeText={setUserMessage}
+          keyboardType='default'
         />
       </View>
-      <TouchableOpacity activeOpacity={1} disabled={responseLoading} onPress={onPress} style={[CustomInputToolbarStyle.textToolbarIcon, responseLoading ? { backgroundColor: '#DDDADA' } : { backgroundColor: '#1D1617', }]} >
-        {responseLoading ?
-          <ActivityIndicator size={'small'} color='white' />
-          :
+      {!responseLoading ?
+        <TouchableOpacity activeOpacity={1} disabled={responseLoading} onPress={onPress} style={[CustomInputToolbarStyle.textToolbarIcon]} >
           <MaterialCommunityIcons name="send" size={25} color={"white"} />
-        }
-        {/*{userMessage === "" ?
-          <FontAwesome name="microphone" size={24} color="white" />
-          :
-          <>
-            {responseLoading ?
-              <ActivityIndicator size={'small'} color='white' />
-              :
-              <MaterialCommunityIcons name="send" size={25} color={"white"} />
-            }
-          </>
-        }*/}
-        {/*{isSpeaking ? 
-        <LottieFiles source={require('../../animations/speaking-white.json')} autoPlay loop />
+        </TouchableOpacity>
         :
-        <MaterialCommunityIcons name="send" size={25} color={"white"} />
-        }*/}
-      </TouchableOpacity>
+        <View style={CustomInputToolbarStyle.textToolbarLoadingIcon} >
+          {/*<LottieView
+            source={require('../../animations/loading.json')}
+            autoPlay
+            loop
+          />*/}
+          <ActivityIndicator size={'small'} color={AppStyles.DarkColor} />
+        </View>
+      }
     </View>
   )
 };

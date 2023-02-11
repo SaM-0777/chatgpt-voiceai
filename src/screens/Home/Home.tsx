@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView, TouchableOpacity, ToastAndroid } from 'react-native';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { View, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView, TouchableOpacity, ToastAndroid, Keyboard, Animated as RNAnimated } from 'react-native';
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { useSharedValue, useAnimatedStyle, FadeIn, runOnJS, withTiming, FadeOut, } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
@@ -11,6 +11,7 @@ import { verify } from '../../utils/api';
 import { OnBoarding, Auth, Chat } from '../../containers';
 
 import Styles from './Styles';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 type HomePropsType = {
@@ -32,6 +33,22 @@ export default function Home({ navigation }: HomePropsType) {
       transform: [{ translateY: offsetY.value }, { scale: scale.value }],
     }
   })
+
+  const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', (event) => {
+      setKeyboardHeight(event.endCoordinates.height);
+    });
+    const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   // check async-storage if user exists
   async function getLocalUser() {
@@ -82,7 +99,7 @@ export default function Home({ navigation }: HomePropsType) {
   }, [])
 
   return (
-    <View style={Styles.container} >
+    <View style={[Styles.container,]} >
       <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
         <LottieView
           source={require('../../animations/ai-animation.json')}

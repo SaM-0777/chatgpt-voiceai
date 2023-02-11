@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, } from 'react-native';
 
 import Signup from './Signup';
 import Login from './Login';
@@ -7,6 +7,7 @@ import ForgotPassword from './ForgotPassword';
 
 import { authStyles } from './Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 type AuthPropsType = {
