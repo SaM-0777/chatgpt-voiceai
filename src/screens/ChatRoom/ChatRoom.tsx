@@ -1,7 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView, Keyboard } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
@@ -58,6 +57,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   // get user access-token and previous chats
   async function getUserToken() {
@@ -168,10 +168,25 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     return () => {}
   }, [])
 
+  // keyboard offset
+  useEffect(() => {
+    Keyboard.addListener('keyboardDidShow', (e) => {
+      setKeyboardHeight(e.endCoordinates.height);
+    });
+
+    Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardHeight(0);
+    });
+
+    return () => {
+      Keyboard.removeAllListeners('keyboardDidShow');
+      Keyboard.removeAllListeners('keyboardDidHide');
+    };
+  }, []);
+
   return (
     <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
       <StatusBar style="auto" backgroundColor="#FFFFFF" />
-      <KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }} resetScrollToCoords={{ x: 0, y: 100 }} enableOnAndroid={true} scrollEnabled={false} keyboardShouldPersistTaps="handled" >
           {loading ? (
               <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
                 <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
@@ -181,21 +196,24 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
               </View>
             )
             :
-            <>
-              <View style={{ flex: 1 }} >
+            <KeyboardAvoidingView style={{ flex: 1 }} behavior='height' keyboardVerticalOffset={48} >
+              <View style={{ flex: 1, paddingBottom:10 }} >
                 <FlashList
                   data={messages}
                   renderItem={({ item }) => <Message message={item} />}
                   inverted
                   estimatedItemSize={850}
+                  // stickyHeaderHiddenOnScroll={false}
+                  // StickyHeaderComponent={() => }
                 />
                 <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} />
               </View>
-            </>
+            </KeyboardAvoidingView>
           }
           {/*<KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1, }} nestedScrollEnabled extraScrollHeight={120} showsVerticalScrollIndicator={false} enableOnAndroid={true} >
           </KeyboardAwareScrollView>*/}
-      </KeyboardAwareScrollView>
+      {/*<KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }} resetScrollToCoords={{ x: 0, y: 0 }} extraHeight={0}  enableOnAndroid={true}  >
+      </KeyboardAwareScrollView>*/}
           </SafeAreaView>
   )
 };

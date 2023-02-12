@@ -7,7 +7,6 @@ import ForgotPassword from './ForgotPassword';
 
 import { authStyles } from './Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 type AuthPropsType = {

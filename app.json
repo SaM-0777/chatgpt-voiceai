@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ask AI",
     "slug": "askai",
-    "version": "1.2.0",
+    "version": "1.3.0",
     "orientation": "portrait",
     "scheme": "com.realm.askai",
     "icon": "./assets/images/icon-ps.png",
@@ -21,7 +21,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 6,
       "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
       "adaptiveIcon": {

@@ -15,7 +15,7 @@ export const CustomInputToolbarStyle = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 10,
         marginHorizontal: 10,
-        marginBottom: 10,
+        // marginBottom: 10,
         borderRadius: 100,
         backgroundColor: '#f1f1f1',
     },

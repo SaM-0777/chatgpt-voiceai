@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, KeyboardAvoidingView, } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
