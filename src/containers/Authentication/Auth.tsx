@@ -15,7 +15,7 @@ type AuthPropsType = {
 
 export default function Auth({ setUser }: AuthPropsType) {
   const [loading, setLoading] = useState(false)
-  const [state, setState] = useState<boolean>(true)
+  const [state, setState] = useState<boolean>(false)
   const [forgotPassword, setForgotPassword] = useState<boolean>(false)
 
   // remove stored user
