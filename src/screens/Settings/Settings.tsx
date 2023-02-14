@@ -12,12 +12,12 @@ type SettingsPropsType = {
 }
 
 export default function Settings({ route, navigation }: SettingsPropsType) {
-  const { setUser } = route?.params
+  const { emptyUser } = route?.params
 
   async function onLogout() {
     try {
       await AsyncStorage.removeItem('@user')
-      setUser(undefined)
+      emptyUser()
       navigation.navigate('home')
     } catch (error) {
       console.log("Settings.Logout: ", error)
@@ -42,4 +42,5 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
       </View>
     </View>
   )
-}
+};
+

@@ -6,6 +6,7 @@ import LottieView from 'lottie-react-native';
 import { Octicons } from '@expo/vector-icons';
 
 import { verify } from '../../utils/api';
+import { useUser } from '../../utils';
 
 import { OnBoarding, Auth, Chat } from '../../containers';
 
@@ -69,9 +70,13 @@ export default function Home({ navigation }: HomePropsType) {
 
   function loadingFinish() { setLoading(false) }
 
+  function emptyUser() {
+    setUser(undefined)
+  }
+
   function onPressSettings() {
     navigation.navigate('settings', {
-      setUser
+      emptyUser: emptyUser
     })
   }
 
