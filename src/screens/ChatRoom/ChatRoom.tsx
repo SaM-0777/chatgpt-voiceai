@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Message } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
-import { generate, getPreviousChats } from "../../utils/api";
+import { getPreviousChats } from "../../utils/api";
 
 import AppStyles from "../../AppStyles";
 import Styles from './Styles';
@@ -51,7 +51,7 @@ export interface IChat {
 
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
-  const [responseLoading, setResponseLoading] = useState(false)
+  // const [responseLoading, setResponseLoading] = useState(false)
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
@@ -79,39 +79,6 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       ToastAndroid.show(error as string, ToastAndroid.SHORT)
       setLoading(false)
     }
-  }
-
-  // get response from bot
-  async function getResponse(text:string) {
-    if (token) {
-      setResponseLoading(true)
-      const response = await generate(token, text)
-      // format the chat and append it to messages
-      if (typeof response !== 'object') {
-        let fResponse = response.trim()
-        // let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
-        // console.log(rResponse)
-        let replyMessage: IMessage[] = [{
-          _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
-          text: fResponse,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'Bot',
-          }
-        }]
-        setMessages((previousMessage: IMessage[]) => [...replyMessage, ...previousMessage])
-        // speakResponse(rResponse)
-        setResponseLoading(false)
-      } else {
-        setResponseLoading(false)
-        ToastAndroid.show(response.error, ToastAndroid.LONG)
-      }
-    } else {
-      setResponseLoading(false)
-      ToastAndroid.show('An error occured', ToastAndroid.LONG)
-    }
-    // setResponseLoading(false)
   }
 
   // format the chats
@@ -160,6 +127,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     setMessages(formatedMessages)
   }
 
+  // get user token
   useEffect(() => {
     getUserToken()
     // speakResponse('Hi bro')
@@ -204,7 +172,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
               // stickyHeaderHiddenOnScroll={false}
               // StickyHeaderComponent={() => }
             />
-            <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} />
+            <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} token={token} />
           </View>
         </KeyboardAvoidingView>
       }

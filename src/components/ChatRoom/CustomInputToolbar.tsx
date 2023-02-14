@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, KeyboardAvoidingView, } from 'react-native';
-import LottieView from 'lottie-react-native';
+import { View, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, } from 'react-native';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { CustomInputToolbarStyle } from './Styles';
 import AppStyles from '../../AppStyles';
+import { generate } from '../../utils/api';
 
 
 export interface User {
@@ -30,14 +30,46 @@ export interface IMessage {
 type CustomInputToolbarPropsType = {
   userMessage: string,
   setUserMessage: (text: string) => void,
-  messages: IMessage[],
-  responseLoading: boolean;
-  setResponseLoading: (loading: boolean) => void;
+  token: string | undefined;
   setMessages: (messages: IMessage[] | ((previousMessage: IMessage[]) => IMessage[])) => void,
-  getResponse: (value: string) => void,
 }
 
-export default function CustomInputToolbar({userMessage, setUserMessage, messages, responseLoading, setResponseLoading, setMessages, getResponse}: CustomInputToolbarPropsType) {
+export default function CustomInputToolbar({userMessage, setUserMessage, setMessages, token}: CustomInputToolbarPropsType) {
+  const [responseLoading, setResponseLoading] = useState(false)
+
+  // get response from bot
+  async function getResponse(text:string) {
+    if (token) {
+      setResponseLoading(true)
+      const response = await generate(token, text)
+      // format the chat and append it to messages
+      if (typeof response !== 'object') {
+        let fResponse = response.trim()
+        // let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
+        // console.log(rResponse)
+        let replyMessage: IMessage[] = [{
+          _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
+          text: fResponse,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'Bot',
+          }
+        }]
+        setMessages((previousMessage: IMessage[]) => [...replyMessage, ...previousMessage])
+        // speakResponse(rResponse)
+        setResponseLoading(false)
+      } else {
+        setResponseLoading(false)
+        ToastAndroid.show(response.error, ToastAndroid.LONG)
+      }
+    } else {
+      setResponseLoading(false)
+      ToastAndroid.show('An error occured', ToastAndroid.LONG)
+    }
+    // setResponseLoading(false)
+  }
+  
   async function onPress() {
     // if (!isPressedOut) console.log("Pressed")
     // console.log(userMessage)
@@ -56,7 +88,7 @@ export default function CustomInputToolbar({userMessage, setUserMessage, message
       // reset the userMessage
       setUserMessage("")
       // post the chat
-      getResponse(userMessage)
+      getResponse(enteredMessage[0].text)
       // setResponseLoading(false)
     } else {
       ToastAndroid.show("No Message", ToastAndroid.SHORT)
