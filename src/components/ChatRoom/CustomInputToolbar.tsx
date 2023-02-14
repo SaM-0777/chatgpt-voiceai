@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, KeyboardAvoidingView, } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { CustomInputToolbarStyle } from './Styles';
@@ -53,7 +52,7 @@ export default function CustomInputToolbar({userMessage, setUserMessage, message
           name: 'Me',
         }
       }]
-      setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, enteredMessage))
+      setMessages((previousMessage: IMessage[]) => [...enteredMessage, ...previousMessage])
       // reset the userMessage
       setUserMessage("")
       // post the chat

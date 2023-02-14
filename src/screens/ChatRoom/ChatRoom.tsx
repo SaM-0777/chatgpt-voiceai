@@ -4,7 +4,6 @@ import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView, Keyboard } 
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
-import { GiftedChat } from "react-native-gifted-chat";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { MicrophoneModal } from "../../containers";
@@ -50,7 +49,6 @@ export interface IChat {
   createdAt: string | Date;
 };
 
-
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
   const [responseLoading, setResponseLoading] = useState(false)
@@ -91,7 +89,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       // format the chat and append it to messages
       if (typeof response !== 'object') {
         let fResponse = response.trim()
-        let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
+        // let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
         // console.log(rResponse)
         let replyMessage: IMessage[] = [{
           _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
@@ -102,7 +100,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
             name: 'Bot',
           }
         }]
-        setMessages((previousMessage: IMessage[]) => GiftedChat.append(previousMessage, replyMessage))
+        setMessages((previousMessage: IMessage[]) => [...replyMessage, ...previousMessage])
         // speakResponse(rResponse)
         setResponseLoading(false)
       } else {
@@ -171,50 +169,46 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   // keyboard offset
   useEffect(() => {
     Keyboard.addListener('keyboardDidShow', (e) => {
-      setKeyboardHeight(e.endCoordinates.height);
-    });
+      setKeyboardHeight(e.endCoordinates.height)
+    })
 
     Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardHeight(0);
-    });
+    })
 
     return () => {
       Keyboard.removeAllListeners('keyboardDidShow');
       Keyboard.removeAllListeners('keyboardDidHide');
-    };
-  }, []);
+    }
+  }, [])
 
   return (
     <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
       <StatusBar style="auto" backgroundColor="#FFFFFF" />
-          {loading ? (
-              <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
-                <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
-                  <ActivityIndicator color="white" size={"small"} />
-                  <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
-                </View>
-              </View>
-            )
-            :
-            <KeyboardAvoidingView style={{ flex: 1 }} behavior='height' keyboardVerticalOffset={48} >
-              <View style={{ flex: 1, paddingBottom:10 }} >
-                <FlashList
-                  data={messages}
-                  renderItem={({ item }) => <Message message={item} />}
-                  inverted
-                  estimatedItemSize={850}
-                  // stickyHeaderHiddenOnScroll={false}
-                  // StickyHeaderComponent={() => }
-                />
-                <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} />
-              </View>
-            </KeyboardAvoidingView>
-          }
-          {/*<KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1, }} nestedScrollEnabled extraScrollHeight={120} showsVerticalScrollIndicator={false} enableOnAndroid={true} >
-          </KeyboardAwareScrollView>*/}
-      {/*<KeyboardAwareScrollView style={{ flex: 1 }} contentContainerStyle={{ flex: 1 }} resetScrollToCoords={{ x: 0, y: 0 }} extraHeight={0}  enableOnAndroid={true}  >
-      </KeyboardAwareScrollView>*/}
-          </SafeAreaView>
+      {loading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
+            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
+              <ActivityIndicator color="white" size={"small"} />
+              <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
+            </View>
+          </View>
+        )
+        :
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior='height' keyboardVerticalOffset={48} >
+          <View style={{ flex: 1, paddingBottom:10 }} >
+            <FlashList
+              data={messages}
+              renderItem={({ item }) => <Message message={item} />}
+              inverted
+              estimatedItemSize={850}
+              // stickyHeaderHiddenOnScroll={false}
+              // StickyHeaderComponent={() => }
+            />
+            <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} messages={messages} setMessages={setMessages} responseLoading={responseLoading} setResponseLoading={setResponseLoading} getResponse={getResponse} />
+          </View>
+        </KeyboardAvoidingView>
+      }
+    </SafeAreaView>
   )
 };
 
