@@ -1,3 +1,4 @@
+import "expo-dev-client";
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';

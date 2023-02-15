@@ -20,7 +20,7 @@ export default StyleSheet.create({
     // flex: 0.7,
     position: 'absolute',
     // top: -ToOffsetY / 1.25,
-    top: '30%',
+    top: '25%',
     // left: '50%',
     width: Dimensions.get('window').width,
     // height: 0.5 * Dimensions.get('window').height,

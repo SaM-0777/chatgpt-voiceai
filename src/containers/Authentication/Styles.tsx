@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 
 import AppStyles from '../../AppStyles';
 
@@ -6,6 +6,7 @@ import AppStyles from '../../AppStyles';
 export const authStyles = StyleSheet.create({
   container: {
     width: '100%',
+    // height: Dimensions.get('window').height,
     flex: 1,
     paddingHorizontal: 15,
   },
@@ -58,7 +59,7 @@ export const signupStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 30,
+    marginVertical: 15,
   },
   orVector: {
     width: '44%',
@@ -76,12 +77,14 @@ export const signupStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   socialButton: {
-    width: 70,
-    height: 70,
+    width: 220,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 7,
+    paddingHorizontal: 15,
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: 7,
     borderColor: AppStyles.GrayColor3
   },
   footerText: {
@@ -95,6 +98,7 @@ export const signupStyles = StyleSheet.create({
 export const loginStyles = StyleSheet.create({
   container: {
     width: '100%',
+    height: '100%',
     flex: 1,
     alignItems: 'center',
   },
@@ -129,7 +133,7 @@ export const loginStyles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 30,
+    marginVertical: 15,
   },
   orVector: {
     width: '44%',
@@ -147,12 +151,14 @@ export const loginStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   socialButton: {
-    width: 70,
-    height: 70,
+    width: 220,
+    height: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 7,
+    paddingHorizontal: 15,
     borderWidth: 1,
-    borderRadius: 15,
+    borderRadius: 7,
     borderColor: AppStyles.GrayColor3
   },
   footerText: {

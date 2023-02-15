@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Dimensions, ToastAndroid } from 'react-native';
+import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { useSharedValue, useAnimatedStyle, FadeIn, runOnJS, withTiming, FadeOut, } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
@@ -23,8 +24,9 @@ const Delay = 1000
 const Duration = 500
 
 export default function Home({ navigation }: HomePropsType) {
-  const [user, setUser] = useState<string | object | undefined>()
-  const [loading, setLoading] = useState(true)
+  // Set an initializing state whilst Firebase connects
+  const [initializing, setInitializing] = useState(true)
+  const [user, setUser] = useState()
   const offsetY = useSharedValue(0)
   const scale = useSharedValue(1)
   const animateLottieContainer = useAnimatedStyle(() => {
@@ -33,8 +35,29 @@ export default function Home({ navigation }: HomePropsType) {
     }
   })
 
+  // Handle user state changes
+  function onAuthStateChanged(user:any) {
+    setUser(user)
+    if (initializing) {
+      // setInitializing(false)
+      offsetY.value = withTiming(ToOffsetY, { duration: Duration }, (finished) => {
+        if (finished) {
+          runOnJS(loadingFinish)()
+        }
+      })
+      scale.value = withTiming(ToScale, {
+        duration: Duration
+      })
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
+    return subscriber // unsubscribe on unmount
+  }, [])
+
   // check async-storage if user exists
-  async function getLocalUser() {
+  /*async function getLocalUser() {
     try {
       const localUser = await AsyncStorage.getItem('@user')
       if (localUser) {
@@ -66,27 +89,26 @@ export default function Home({ navigation }: HomePropsType) {
         duration: Duration
       })
     }
-  }
+  }*/
 
-  function loadingFinish() { setLoading(false) }
+  function loadingFinish() { setInitializing(false) }
 
   function emptyUser() {
     setUser(undefined)
   }
 
   function onPressSettings() {
-    navigation.navigate('settings', {
-      emptyUser: emptyUser
-    })
+    navigation.navigate('settings')
   }
 
   useEffect(() => {
-    getLocalUser()
+    // getLocalUser()
     return () => {}
   }, [])
 
   return (
     <View style={[Styles.container,]} >
+      {user && <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: 10, right: 20 }} />}
       <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
         <LottieView
           source={require('../../animations/ai-animation.json')}
@@ -95,18 +117,15 @@ export default function Home({ navigation }: HomePropsType) {
         />
       </Animated.View>
       <View style={[Styles.wrapper]} >
-        {!loading && (
+        {!initializing && (
           <>
             {user ?
-              <>
-                <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: -(Dimensions.get('window').height / 3.52), right: 25 }} />
-                <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                  <Chat navigation={navigation} />
-                </Animated.View>
-              </>
+              <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
+                <Chat navigation={navigation} />
+              </Animated.View>
               :
               <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                <Auth setUser={setUser} />
+                <Auth />
               </Animated.View>
             }
           </>

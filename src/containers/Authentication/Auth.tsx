@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { View, Text, } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, } from 'react-native';
+import { SvgXml } from 'react-native-svg';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import Signup from './Signup';
 import Login from './Login';
@@ -7,24 +9,29 @@ import ForgotPassword from './ForgotPassword';
 
 import { authStyles } from './Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FacebookLogo, GoogleLogo } from '../../svg';
 
 
 type AuthPropsType = {
   setUser: (token: string) => void;
-}
+};
 
-export default function Auth({ setUser }: AuthPropsType) {
+GoogleSignin.configure({
+  webClientId: '177945594154-o70aafe41m38as1toh5fcceueule5nqg.apps.googleusercontent.com',
+});
+
+export default function Auth() {
   const [loading, setLoading] = useState(false)
   const [state, setState] = useState<boolean>(false)
   const [forgotPassword, setForgotPassword] = useState<boolean>(false)
 
   // remove stored user
-  async function removerolduser() {
+  /*async function removerolduser() {
     await AsyncStorage.removeItem('@user')
-  }
+  }*/
 
   useEffect(() => {
-    removerolduser()
+    // removerolduser()
     return () => {}
   }, [])
 
@@ -35,9 +42,9 @@ export default function Auth({ setUser }: AuthPropsType) {
         :
         <>
           {state ?
-            <Signup loading={loading} setLoading={setLoading} setUser={setUser} />
+            <Signup loading={loading} setLoading={setLoading} />
             :
-            <Login loading={loading} setLoading={setLoading} setUser={setUser} setForgotPassword={setForgotPassword} />
+            <Login loading={loading} setLoading={setLoading} setForgotPassword={setForgotPassword} />
           }
         </>
       }

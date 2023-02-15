@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ask AI",
     "slug": "askai",
-    "version": "1.3.0",
+    "version": "2.0.1",
     "orientation": "portrait",
     "scheme": "com.realm.askai",
     "icon": "./assets/images/icon-ps.png",
@@ -21,9 +21,10 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 6,
+      "versionCode": 7,
       "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/icon-ps.png",
         "backgroundColor": "#FFFFFF"
@@ -36,6 +37,10 @@
       "eas": {
         "projectId": "703fb0db-170b-442c-8b86-5d5bed02c99d"
       }
-    }
+    },
+    "plugins": [
+      "@react-native-firebase/app",
+      "@react-native-google-signin/google-signin"
+    ]
   }
 }

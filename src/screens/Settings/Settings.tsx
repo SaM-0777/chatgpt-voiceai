@@ -1,9 +1,11 @@
-import React, { useContext } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { View, Text, TouchableOpacity, ToastAndroid } from 'react-native'
 import { Octicons, MaterialIcons } from '@expo/vector-icons';
+import auth from '@react-native-firebase/auth';
 
 import Styles from './Styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ActivityIndicator } from 'react-native-paper';
 
 
 type SettingsPropsType = {
@@ -12,20 +14,23 @@ type SettingsPropsType = {
 }
 
 export default function Settings({ route, navigation }: SettingsPropsType) {
-  const { emptyUser } = route?.params
+  const [loading, setLoading] = useState<boolean>(false)
 
   async function onLogout() {
-    try {
-      await AsyncStorage.removeItem('@user')
-      emptyUser()
+    setLoading(true)
+    auth()
+    .signOut()
+    .then(() => {
+      console.log('User signed out!')
       navigation.navigate('home')
-    } catch (error) {
-      console.log("Settings.Logout: ", error)
-    }
+      // setLoading(false)
+    }).catch((error) => {
+      ToastAndroid.show("Something went wrong", ToastAndroid.LONG)
+    })
   }
 
   function navigateToChangePassword() {
-    navigation.navigate('change-password')
+    if (!loading) navigation.navigate('change-password')
   }
 
   return (
@@ -35,9 +40,12 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
           <Octicons name="person" size={24} color="black" />
           <Text style={Styles.btnText} >Change Password</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={onLogout} activeOpacity={0.85} style={Styles.btn} >
-          <MaterialIcons name="logout" size={24} color="black" />
-          <Text style={Styles.btnText} >logout</Text>
+        <TouchableOpacity disabled={loading} onPress={onLogout} activeOpacity={0.85} style={[Styles.btn, { justifyContent: 'space-between' }]} >
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
+            <MaterialIcons name="logout" size={24} color="black" />
+            <Text style={Styles.btnText} >logout</Text>
+          </View>
+          {loading && <ActivityIndicator color='#101010' />}
         </TouchableOpacity>
       </View>
     </View>
