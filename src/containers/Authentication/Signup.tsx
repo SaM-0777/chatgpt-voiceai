@@ -44,8 +44,13 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
       ToastAndroid.show(response.error, ToastAndroid.LONG)
     }*/
     auth().createUserWithEmailAndPassword(signupInfo.email, signupInfo.password)
-    .then(() => {
-      ToastAndroid.show('User account created & signed in!', ToastAndroid.LONG)
+    .then(({ user }) => {
+      ToastAndroid.show('User account created & signed in!', ToastAndroid.SHORT)
+      user.sendEmailVerification().then(() => {
+        ToastAndroid.show("An verification email has been sent. Make sure to check SPAM folders.", ToastAndroid.LONG)
+      }).catch((error) => {
+        console.log("error: ", error)
+      })
       setSignupLoading(false)
       setLoading(false)
     })
@@ -102,12 +107,12 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
     setFacebookSignInLoading(false)
     setGoogleSignInLoading(false)
   }
-  async function facebookSignIn() {
+  /*async function facebookSignIn() {
     setLoading(true)
     setSignupLoading(false)
     setGoogleSignInLoading(false)
     setFacebookSignInLoading(true)
-  }
+  }*/
 
   return (
     <View style={signupStyles.container} >

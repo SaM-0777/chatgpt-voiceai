@@ -43,13 +43,13 @@ export default function Chat({ navigation }: ChatPropsType) {
           </View>
           <View style={Styles.boxContainer} >
             <View style={Styles.box} >
-              <Text style={Styles.boxText} >Remembers what user said earlier in the conversation</Text>
+              <Text style={Styles.boxText} >Remembers what user said earlier in the conversation.</Text>
             </View>
             <View style={Styles.box} >
-              <Text style={Styles.boxText} >Allows user to provide follow-up corrections</Text>
+              <Text style={Styles.boxText} >Allows user to provide follow-up corrections.</Text>
             </View>
             <View style={Styles.box} >
-              <Text style={Styles.boxText} >Trained to decline inappropriate requests</Text>
+              <Text style={Styles.boxText} >Trained to decline inappropriate requests.</Text>
             </View>
           </View>
         </View>
@@ -60,13 +60,13 @@ export default function Chat({ navigation }: ChatPropsType) {
           </View>
           <View style={Styles.boxContainer} >
             <View style={Styles.box} >
-              <Text style={Styles.boxText} >May occasionally generate incorrect information</Text>
+              <Text style={Styles.boxText} >May occasionally generate incorrect information.</Text>
             </View>
             <View style={Styles.box} >
-              <Text style={Styles.boxText} >May occasionally produce harmful instructions or biased content</Text>
+              <Text style={Styles.boxText} >May occasionally produce harmful instructions.</Text>
             </View>
             <View style={Styles.box} >
-              <Text style={Styles.boxText} >Limited knowledge of world and events after 2021</Text>
+              <Text style={Styles.boxText} >Limited knowledge of world.</Text>
             </View>
           </View>
         </View>

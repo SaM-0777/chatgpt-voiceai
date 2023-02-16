@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, TouchableOpacity, ActivityIndicator, ToastAndroid } from 'react-native';
+import auth from "@react-native-firebase/auth";
 
 import { ForgotPasswordHeader, ForgotPasswordEmailInput } from '../../components';
 
@@ -18,13 +19,19 @@ export default function ForgotPassword({ loading, setLoading }: ForgotPasswordPr
 
   async function onPress() {
     setLoading(true)
-    const response = await forgot(email)
+    auth().sendPasswordResetEmail(email).then(function(user) {
+      ToastAndroid.show("An email has been send with instructions. Make sure to check the SPAM folders.", ToastAndroid.LONG)
+      setLoading(false)
+    }).catch(function(error) {
+      console.log(error)
+      setLoading(false)
+    })
+    /*const response = await forgot(email)
     if (typeof response === 'string') {
       ToastAndroid.show(response, ToastAndroid.LONG)
     } else {
       ToastAndroid.show("Server connection failed", ToastAndroid.LONG)
-    }
-    setLoading(false)
+    }*/
   }
 
   return (

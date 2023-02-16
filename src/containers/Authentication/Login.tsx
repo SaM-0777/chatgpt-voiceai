@@ -49,7 +49,7 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
         if (error.code === 'auth/wrong-password') {
           ToastAndroid.show('Wrong Password!', ToastAndroid.LONG)
         }
-        ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
+        // ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
         setLoginLoading(false)
         setLoading(false)
       })
@@ -101,12 +101,12 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
     })
   }
 
-  async function facebookSignIn() {
-    /*setLoading(true)
+  /*async function facebookSignIn() {
+    setLoading(true)
     setLoginLoading(false)
     setGoogleSignInLoading(false)
-    setFacebookSignInLoading(true)*/
-  }
+    setFacebookSignInLoading(true)
+  }*/
 
   return (
     <View style={loginStyles.container} >
