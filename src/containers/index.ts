@@ -3,6 +3,7 @@ import Auth from "./Authentication";
 import Chat from "./Chat";
 import MicrophoneModal from "./MicrophoneModal";
 import Message from "./ChatScreen";
+import VerifyEmailModal from "./VerifyEmail";
 
 
 export { 
@@ -11,5 +12,6 @@ export {
   Chat,
   MicrophoneModal,
   Message,
+  VerifyEmailModal,
 };
 

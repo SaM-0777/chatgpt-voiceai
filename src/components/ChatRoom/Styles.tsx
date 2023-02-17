@@ -5,6 +5,8 @@ import AppStyles from "../../AppStyles";
 
 export const CustomInputToolbarStyle = StyleSheet.create({
     textToolbarContainer: {
+        position: 'absolute',
+        bottom: 10,
         width: '95%',
         height: 55,
         flexDirection: 'row',
@@ -18,6 +20,7 @@ export const CustomInputToolbarStyle = StyleSheet.create({
         // marginBottom: 10,
         borderRadius: 100,
         backgroundColor: '#f1f1f1',
+        zIndex: 1,
     },
     textContainer: {
         width: '88%',

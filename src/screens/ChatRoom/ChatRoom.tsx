@@ -1,13 +1,14 @@
 import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
-import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView, Keyboard } from "react-native";
+import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView, Keyboard, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
+import auth from "@react-native-firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { MicrophoneModal } from "../../containers";
-import { Message } from "../../containers";
+import { Message, VerifyEmailModal } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
 import { getPreviousChats } from "../../utils/api";
@@ -51,6 +52,7 @@ export interface IChat {
 
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(false)
+  const [isEmailVerifyModal, setIsEmailVerifyModal] = useState<boolean>(false)
   // const [responseLoading, setResponseLoading] = useState(false)
   const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
@@ -58,7 +60,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   // get user access-token and previous chats
-  async function getUserToken() {
+  /*async function getUserToken() {
     setLoading(true)
     try {
       const userToken = await AsyncStorage.getItem('@user')
@@ -79,7 +81,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       ToastAndroid.show(error as string, ToastAndroid.SHORT)
       setLoading(false)
     }
-  }
+  }*/
 
   // format the chats
   function formatMessages(chats: IChat[]) {
@@ -127,28 +129,40 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     setMessages(formatedMessages)
   }
 
-  // get user token
+  // check if user-email is verified
   useEffect(() => {
-    getUserToken()
+    // getUserToken()
     // speakResponse('Hi bro')
+
+    if (!auth().currentUser?.emailVerified) {
+      setIsEmailVerifyModal(true)
+    }
+    else {
+      setIsEmailVerifyModal(false)
+    }
+
     return () => {}
   }, [])
 
+  function closeVerifyEmailmodal() { setIsEmailVerifyModal(false) }
+
   // keyboard offset
-  useEffect(() => {
+  /*useEffect(() => {
     Keyboard.addListener('keyboardDidShow', (e) => {
+      console.log("Here")
       setKeyboardHeight(e.endCoordinates.height)
     })
 
     Keyboard.addListener('keyboardDidHide', () => {
-      setKeyboardHeight(0);
+      setKeyboardHeight(0)
     })
 
     return () => {
-      Keyboard.removeAllListeners('keyboardDidShow');
-      Keyboard.removeAllListeners('keyboardDidHide');
+      Keyboard.removeAllListeners('keyboardDidShow')
+      Keyboard.removeAllListeners('keyboardDidHide')
     }
-  }, [])
+  }, [])*/
+  
 
   return (
     <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
@@ -162,19 +176,19 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
           </View>
         )
         :
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior='height' keyboardVerticalOffset={48} >
-          <View style={{ flex: 1, paddingBottom:10 }} >
-            <FlashList
-              data={messages}
-              renderItem={({ item }) => <Message message={item} />}
-              inverted
-              estimatedItemSize={850}
-              // stickyHeaderHiddenOnScroll={false}
-              // StickyHeaderComponent={() => }
-            />
-            <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} token={token} />
-          </View>
-        </KeyboardAvoidingView>
+        <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
+          <FlashList
+            data={messages}
+            renderItem={({ item }) => <Message message={item} />}
+            inverted
+            estimatedItemSize={850}
+                          
+            // stickyHeaderHiddenOnScroll={false}
+            // StickyHeaderComponent={() => }
+          />
+          <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} token={token} />
+          {isEmailVerifyModal && <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />}
+        </View>
       }
     </SafeAreaView>
   )
