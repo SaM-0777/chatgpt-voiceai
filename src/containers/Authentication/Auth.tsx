@@ -17,7 +17,7 @@ type AuthPropsType = {
 };
 
 GoogleSignin.configure({
-  webClientId: '177945594154-o70aafe41m38as1toh5fcceueule5nqg.apps.googleusercontent.com',
+  webClientId: '353419538082-sjhsmtkkjov0uq6lqat71aigv27k0r6p.apps.googleusercontent.com',
 });
 
 export default function Auth() {

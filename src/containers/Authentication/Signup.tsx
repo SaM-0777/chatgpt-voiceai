@@ -58,10 +58,10 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
       if (error.code === 'auth/email-already-in-use') {
         ToastAndroid.show('That email address is already in use!', ToastAndroid.LONG)
       }
-
       if (error.code === 'auth/invalid-email') {
         ToastAndroid.show('That email address is invalid!', ToastAndroid.LONG)
       }
+      console.log(error)
       ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
       setSignupLoading(false)
       setLoading(false)

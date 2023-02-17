@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, TouchableOpacity, ToastAndroid, ActivityIndicator, } from 'react-native';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import auth from "@react-native-firebase/auth";
 
 import { CustomInputToolbarStyle } from './Styles';
 import AppStyles from '../../AppStyles';
@@ -30,16 +31,15 @@ export interface IMessage {
 type CustomInputToolbarPropsType = {
   userMessage: string,
   setUserMessage: (text: string) => void,
-  token: string | undefined;
   setMessages: (messages: IMessage[] | ((previousMessage: IMessage[]) => IMessage[])) => void,
 }
 
-export default function CustomInputToolbar({userMessage, setUserMessage, setMessages, token}: CustomInputToolbarPropsType) {
+export default function CustomInputToolbar({userMessage, setUserMessage, setMessages}: CustomInputToolbarPropsType) {
   const [responseLoading, setResponseLoading] = useState(false)
 
   // get response from bot
   async function getResponse(text:string) {
-    if (token) {
+    /*if (token) {
       setResponseLoading(true)
       const response = await generate(token, text)
       // format the chat and append it to messages
@@ -66,14 +66,14 @@ export default function CustomInputToolbar({userMessage, setUserMessage, setMess
     } else {
       setResponseLoading(false)
       ToastAndroid.show('An error occured', ToastAndroid.LONG)
-    }
+    }*/
     // setResponseLoading(false)
   }
   
   async function onPress() {
     // if (!isPressedOut) console.log("Pressed")
     // console.log(userMessage)
-    if (userMessage && userMessage !== "") {
+    /*if (userMessage && userMessage !== "") {
       setResponseLoading(true)
       let enteredMessage: IMessage[] = [{
         _id: Math.floor(Math.random() * (1000000 - 1000 + 1)) + 1,
@@ -92,7 +92,24 @@ export default function CustomInputToolbar({userMessage, setUserMessage, setMess
       // setResponseLoading(false)
     } else {
       ToastAndroid.show("No Message", ToastAndroid.SHORT)
+    }*/
+    setResponseLoading(true)
+    try {
+      const idToken = await auth().currentUser?.getIdToken()
+      const response = await fetch('http://10.0.1.190:3333/api/user/generateV2', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-type': 'application/json',
+          'userid': 'Bearer ' + idToken,
+        },
+      })
+      const result = await response.json()
+      console.log(result)
+    } catch (error) {
+      console.log("Request error: ", error)
     }
+    setResponseLoading(false)
   }
 
   return (

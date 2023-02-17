@@ -1,20 +1,20 @@
 {
   "project_info": {
-    "project_number": "177945594154",
-    "project_id": "ask-ai-1a1ec",
-    "storage_bucket": "ask-ai-1a1ec.appspot.com"
+    "project_number": "353419538082",
+    "project_id": "askai-dd608",
+    "storage_bucket": "askai-dd608.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:177945594154:android:c78f22354aeaf1a6d37653",
+        "mobilesdk_app_id": "1:353419538082:android:e862766f8402595751f1fb",
         "android_client_info": {
           "package_name": "com.realm.askai"
         }
       },
       "oauth_client": [
         {
-          "client_id": "177945594154-is5bk6jr9u04pi5sbo94pbkqesqql9bc.apps.googleusercontent.com",
+          "client_id": "353419538082-r6408vqo207gfjanmddmh3un4vekplm0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.realm.askai",
@@ -22,20 +22,20 @@
           }
         },
         {
-          "client_id": "177945594154-o70aafe41m38as1toh5fcceueule5nqg.apps.googleusercontent.com",
+          "client_id": "353419538082-sjhsmtkkjov0uq6lqat71aigv27k0r6p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBri2zs8iIa5u67sJNZfFJzcBchH-qTWG8"
+          "current_key": "AIzaSyA9TZbNKbhrU3V_bZgPDouNSjX1vnRLfbY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "177945594154-o70aafe41m38as1toh5fcceueule5nqg.apps.googleusercontent.com",
+              "client_id": "353419538082-sjhsmtkkjov0uq6lqat71aigv27k0r6p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

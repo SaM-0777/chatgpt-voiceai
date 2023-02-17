@@ -186,7 +186,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
             // stickyHeaderHiddenOnScroll={false}
             // StickyHeaderComponent={() => }
           />
-          <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} token={token} />
+          <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} />
           {isEmailVerifyModal && <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />}
         </View>
       }

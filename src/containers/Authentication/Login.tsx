@@ -52,6 +52,9 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
         // ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
         setLoginLoading(false)
         setLoading(false)
+      }).finally(() => {
+        setLoginLoading(false)
+        setLoading(false)
       })
     /*const response = await login(loginInfo.email, loginInfo.password)
     if (Object.keys(response)[0] === 'success') {
