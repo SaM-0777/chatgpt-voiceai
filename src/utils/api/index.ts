@@ -147,59 +147,53 @@ export async function change(email:string, token: string) {
     }
 };
 
-export async function getPreviousChats(token: string) {
-    const url = `${Address}/api/user/chat`
 
-    const payload = {
-        token: token.toString(),
-    }
+// from here
+
+export async function getPreviousChats(token: string) {
+    const url = `${Address}/api/user/chatV2`
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'authorization': 'Bearer ' + token,
             },
-            body: JSON.stringify(payload),
         })
         const responseJson = await response.json()
         // console.log("responseJson: ", responseJson)
-        if (response.status === 200) {
-            return responseJson.chats
-        } else {
-            return { error: "An error occurred while generating the responses." }
-        }
+        return responseJson
     } catch (error) {
-        return { error: error }
+        return { error: 1, message: "Something went wrong" }
     }
 };
 
 export async function generate(token: string, message: string) {
-    const url = `${Address}/api/user/generate`
+    const url = `${Address}/api/user/generateV2`
 
     const payload = {
-        token: token,
         message: message,
     }
 
     try {
+        const idToken = token
         const response = await fetch(url, {
             method: 'POST',
+            body: JSON.stringify({
+                message: message
+            }),
             headers: {
                 Accept: 'application/json',
-                'Content-type': 'application/json'
+                'Content-type': 'application/json',
+                'authorization': 'Bearer ' + idToken,
             },
-            body: JSON.stringify(payload),
         })
-        const responseJson = await response.json()
-        // console.log("responseJson: ", responseJson)
-        if (response.status === 200) {
-            return responseJson.result
-        } else {
-            return { error: "An error occurred while generating the response" }
-        }
+        const result = await response.json()
+        return result
     } catch (error) {
-        return { error: "An error occured. Try again later." }
+        console.log("Request error: ", error)
+        return { error: 1, message: "Something went wrong"}
     }
 };

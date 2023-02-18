@@ -38,42 +38,37 @@ export default function CustomInputToolbar({userMessage, setUserMessage, setMess
   const [responseLoading, setResponseLoading] = useState(false)
 
   // get response from bot
-  async function getResponse(text:string) {
-    /*if (token) {
-      setResponseLoading(true)
-      const response = await generate(token, text)
-      // format the chat and append it to messages
-      if (typeof response !== 'object') {
-        let fResponse = response.trim()
+  async function getResponse(text: string) {
+    const userIdToken = await auth().currentUser?.getIdToken()
+    
+    if (userIdToken) {
+      const response = await generate(userIdToken, text)
+      // check if response is error or not
+      if (response.error === '1' || response.error === 1) {
+        ToastAndroid.show(response.message, ToastAndroid.SHORT)
+      } else {
+        // format the chat and append it to messages
+        let fResponse = response.message
         // let rResponse = response.trim().replace(/[^\w\s]/gi, " ")
         // console.log(rResponse)
         let replyMessage: IMessage[] = [{
           _id: Math.floor(Math.random() * (999999999 - 999999 + 1)) + 1,
           text: fResponse,
-          createdAt: new Date(),
+          createdAt: response.date,
           user: {
             _id: 2,
             name: 'Bot',
           }
         }]
         setMessages((previousMessage: IMessage[]) => [...replyMessage, ...previousMessage])
-        // speakResponse(rResponse)
-        setResponseLoading(false)
-      } else {
-        setResponseLoading(false)
-        ToastAndroid.show(response.error, ToastAndroid.LONG)
       }
     } else {
-      setResponseLoading(false)
-      ToastAndroid.show('An error occured', ToastAndroid.LONG)
-    }*/
-    // setResponseLoading(false)
+      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
+    }
   }
   
   async function onPress() {
-    // if (!isPressedOut) console.log("Pressed")
-    // console.log(userMessage)
-    /*if (userMessage && userMessage !== "") {
+    if (userMessage && userMessage !== "") {
       setResponseLoading(true)
       let enteredMessage: IMessage[] = [{
         _id: Math.floor(Math.random() * (1000000 - 1000 + 1)) + 1,
@@ -84,32 +79,17 @@ export default function CustomInputToolbar({userMessage, setUserMessage, setMess
           name: 'Me',
         }
       }]
+      // append the chat
       setMessages((previousMessage: IMessage[]) => [...enteredMessage, ...previousMessage])
       // reset the userMessage
       setUserMessage("")
       // post the chat
-      getResponse(enteredMessage[0].text)
-      // setResponseLoading(false)
+      await getResponse(enteredMessage[0].text)
+      setResponseLoading(false)
     } else {
-      ToastAndroid.show("No Message", ToastAndroid.SHORT)
-    }*/
-    setResponseLoading(true)
-    try {
-      const idToken = await auth().currentUser?.getIdToken()
-      const response = await fetch('http://10.0.1.190:3333/api/user/generateV2', {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-type': 'application/json',
-          'userid': 'Bearer ' + idToken,
-        },
-      })
-      const result = await response.json()
-      console.log(result)
-    } catch (error) {
-      console.log("Request error: ", error)
+      ToastAndroid.show("Type a Message", ToastAndroid.SHORT)
+      setResponseLoading(false)
     }
-    setResponseLoading(false)
   }
 
   return (

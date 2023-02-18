@@ -51,7 +51,7 @@ export interface IChat {
 };
 
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isEmailVerifyModal, setIsEmailVerifyModal] = useState<boolean>(false)
   // const [responseLoading, setResponseLoading] = useState(false)
   const [token, setToken] = useState<string>()
@@ -59,29 +59,33 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [messages, setMessages] = useState<IMessage[]>([])
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  // get user access-token and previous chats
-  /*async function getUserToken() {
+  // get previous chats
+  async function getUserChats() {
     setLoading(true)
     try {
-      const userToken = await AsyncStorage.getItem('@user')
+      const userToken = await auth().currentUser?.getIdToken()
       if (userToken) {
-        const storedToken = JSON.parse(userToken)
-        setToken(storedToken)
-        // get previous chats
         try {
-          const chats: IChat[] = await getPreviousChats(storedToken)
-          // append to messages
-          formatMessages(chats)
+          const response = await getPreviousChats(userToken)
+          if (response.error === '1' || response.message === 1) {
+            ToastAndroid.show(response.message, ToastAndroid.SHORT)
+          } else {
+            const chats: IChat[] = response.message
+            // append to messages
+            formatMessages(chats)
+          }
         } catch (error) {
           ToastAndroid.show('An error occured. Try again later', ToastAndroid.LONG)
         }
+      } else {
+        ToastAndroid.show('User not found. Try again Later', ToastAndroid.SHORT)
       } 
       setLoading(false)
     } catch (error) {
-      ToastAndroid.show(error as string, ToastAndroid.SHORT)
+      ToastAndroid.show('Something went wrong', ToastAndroid.SHORT)
       setLoading(false)
     }
-  }*/
+  }
 
   // format the chats
   function formatMessages(chats: IChat[]) {
@@ -136,6 +140,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     }
     else {
       setIsEmailVerifyModal(false)
+      getUserChats()
     }
 
     return () => {}
@@ -159,22 +164,21 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       Keyboard.removeAllListeners('keyboardDidHide')
     }
   }, [])
-  
 
   return (
     <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
       <StatusBar style="auto" backgroundColor="#FFFFFF" />
-      {loading ?
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
-            <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
-              <ActivityIndicator color="white" size={"small"} />
-              <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
-            </View>
-          </View>
+      {isEmailVerifyModal ?
+          <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />
         :
           <>
-            {isEmailVerifyModal ? 
-                <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />
+            {loading ?
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
+                  <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
+                    <ActivityIndicator color="white" size={"small"} />
+                    <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
+                  </View>
+                </View>
               :
                 <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={48} >
                   <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
