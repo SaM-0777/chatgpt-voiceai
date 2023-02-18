@@ -131,9 +131,6 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
 
   // check if user-email is verified
   useEffect(() => {
-    // getUserToken()
-    // speakResponse('Hi bro')
-
     if (!auth().currentUser?.emailVerified) {
       setIsEmailVerifyModal(true)
     }
@@ -147,7 +144,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   function closeVerifyEmailmodal() { setIsEmailVerifyModal(false) }
 
   // keyboard offset
-  /*useEffect(() => {
+  useEffect(() => {
     Keyboard.addListener('keyboardDidShow', (e) => {
       console.log("Here")
       setKeyboardHeight(e.endCoordinates.height)
@@ -161,34 +158,40 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
       Keyboard.removeAllListeners('keyboardDidShow')
       Keyboard.removeAllListeners('keyboardDidHide')
     }
-  }, [])*/
+  }, [])
   
 
   return (
     <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
       <StatusBar style="auto" backgroundColor="#FFFFFF" />
-      {loading ? (
+      {loading ?
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
             <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
               <ActivityIndicator color="white" size={"small"} />
               <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
             </View>
           </View>
-        )
         :
-        <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
-          <FlashList
-            data={messages}
-            renderItem={({ item }) => <Message message={item} />}
-            inverted
-            estimatedItemSize={850}
-                          
-            // stickyHeaderHiddenOnScroll={false}
-            // StickyHeaderComponent={() => }
-          />
-          <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} />
-          {isEmailVerifyModal && <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />}
-        </View>
+          <>
+            {isEmailVerifyModal ? 
+                <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />
+              :
+                <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={48} >
+                  <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
+                    <FlashList
+                      data={messages}
+                      renderItem={({ item }) => <Message message={item} />}
+                      inverted
+                      estimatedItemSize={850}
+                                    
+                      // stickyHeaderHiddenOnScroll={false}
+                      // StickyHeaderComponent={() => }
+                    />
+                    <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} />
+                  </View>
+                </KeyboardAvoidingView>
+            }
+          </>
       }
     </SafeAreaView>
   )

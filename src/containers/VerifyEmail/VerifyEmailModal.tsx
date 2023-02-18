@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, ActivityIndicator, TouchableOpacity, ToastAndroid } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import auth from "@react-native-firebase/auth";
 
 import Styles from './Styles';
@@ -11,17 +12,24 @@ type VerifyEmailModalPropsType = {
 }
 
 export default function VerifyEmailModal({ onPressLater, messageLength }: VerifyEmailModalPropsType) {
+  const navigation = useNavigation()
   const [verifyloading, setVerifyloading] = useState<boolean>(false)
-  
-  /*function onPressLater() {
-    // close modal
-  }*/
+
   function onPressVerify() {
     setVerifyloading(true)
     auth().currentUser?.sendEmailVerification().then(() => {
-      ToastAndroid.show('A verification email has been sent to. Make sure to check SPAM folder', ToastAndroid.LONG)
-      onPressLater()
-      setVerifyloading(false)
+      auth()
+      .signOut()
+      .then(() => {
+        navigation.navigate('home')
+        ToastAndroid.show('A verification email has been sent to. Make sure to check SPAM folder', ToastAndroid.LONG)
+        onPressLater()
+        setVerifyloading(false)
+      }).catch((error) => {
+        ToastAndroid.show('A verification email has been sent to. Make sure to check SPAM folder', ToastAndroid.LONG)
+        onPressLater()
+        setVerifyloading(false)
+      })
     }).catch((error) => {
       ToastAndroid.show('Something went wrong.', ToastAndroid.LONG)
       setVerifyloading(false)
