@@ -114,8 +114,8 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
   return (
     <View style={loginStyles.container} >
       <LoginHeader />
-      <InputArea inputFor='email' text={loginInfo!} setText={setLoginInfo} />
-      <PasswordInput inputFor='password' text={loginInfo!} setText={setLoginInfo} />
+      <InputArea inputFor='email' text={loginInfo!} setText={setLoginInfo} validate={false} />
+      <PasswordInput inputFor='password' text={loginInfo!} setText={setLoginInfo} validate={false} />
       <TouchableOpacity disabled={loading} activeOpacity={0.95} onPress={onPressForgot} style={loginStyles.forgotPasswordContainer} >
         <Text style={loginStyles.forgotText} >Forgot Password?</Text>
       </TouchableOpacity>

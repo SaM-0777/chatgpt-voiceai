@@ -32,6 +32,7 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
   const [googleSignInLoading, setGoogleSignInLoading] = useState<boolean>(false)
   const [facebookSignInLoading, setFacebookSignInLoading] = useState<boolean>(false)
   const [signupInfo, setSignupInfo] = useState<SignupType>({ email: "", password: "" })
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(false)
 
   async function signup() {
     setSignupLoading(true)
@@ -117,11 +118,14 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
   return (
     <View style={signupStyles.container} >
       <SignupHeader />
-      <InputArea inputFor='email' text={signupInfo!} setText={setSignupInfo} />
+      <InputArea inputFor='email' text={signupInfo!} setText={setSignupInfo} validate={true} />
       <View style={{ alignSelf: 'flex-start', marginBottom: 7, }} >
         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 12, color: '#a0a0a0' }} >You'll need to verify that you own this email account.</Text>
       </View>
-      <PasswordInput inputFor='password' text={signupInfo!} setText={setSignupInfo} />
+      <PasswordInput inputFor='password' text={signupInfo!} setText={setSignupInfo} validate={true} />
+      <View style={{ alignSelf: 'flex-start', marginBottom: 7, }} >
+        <Text style={{ fontFamily: "PoppinsRegular", fontSize: 12, color: '#a0a0a0', textAlign: 'justify' }} >Strong password must have at least 8 characters and contains a mix of lowercase and uppercase letters, digits, and special characters.</Text>
+      </View>
       {/*<View style={signupStyles.checkboxContainer} >
         <Checkbox status={checked ? 'checked' : 'unchecked'} onPress={toggleCheck} color={AppStyles.GrayColor2} />
         <Text style={signupStyles.checkboxText} >
