@@ -29,7 +29,9 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
   const [loginLoading, setLoginLoading] = useState<boolean>(false)
   const [googleSignInLoading, setGoogleSignInLoading] = useState<boolean>(false)
   const [facebookSignInLoading, setFacebookSignInLoading] = useState<boolean>(false)
-  const [loginInfo, setLoginInfo] = useState<LoginType>({email: "", password: ""})
+  const [loginInfo, setLoginInfo] = useState<LoginType>({ email: "", password: "" })
+  const [isEmailValid, setsIsEmailValid] = useState<boolean>(false)
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false)
 
   async function onLogin() {
     setLoginLoading(true)
@@ -48,8 +50,9 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
         }
         if (error.code === 'auth/wrong-password') {
           ToastAndroid.show('Wrong Password!', ToastAndroid.LONG)
+        } else {
+          ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
         }
-        // ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
         setLoginLoading(false)
         setLoading(false)
       }).finally(() => {
@@ -66,6 +69,8 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
     /*setLoginLoading(false)
     setLoading(false)*/
   }
+
+  function onFalseLogin() { ToastAndroid.show('Provide correct login details', ToastAndroid.SHORT) }
 
   function onPressForgot() {
     setForgotPassword(true)
@@ -114,12 +119,12 @@ export default function Login({ loading, setLoading, setForgotPassword }: LoginP
   return (
     <View style={loginStyles.container} >
       <LoginHeader />
-      <InputArea inputFor='email' text={loginInfo!} setText={setLoginInfo} validate={false} />
-      <PasswordInput inputFor='password' text={loginInfo!} setText={setLoginInfo} validate={false} />
+      <InputArea inputFor='email' text={loginInfo!} setText={setLoginInfo} validate={false} setInputValid={setsIsEmailValid} />
+      <PasswordInput inputFor='password' text={loginInfo!} setText={setLoginInfo} validate={false} setInputValid={setIsPasswordValid} />
       <TouchableOpacity disabled={loading} activeOpacity={0.95} onPress={onPressForgot} style={loginStyles.forgotPasswordContainer} >
         <Text style={loginStyles.forgotText} >Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity disabled={loading || loginLoading || googleSignInLoading || facebookSignInLoading} activeOpacity={0.95} onPress={onLogin} style={loginStyles.loginBtnContainer} >
+      <TouchableOpacity disabled={loading || loginLoading || googleSignInLoading || facebookSignInLoading} activeOpacity={0.95} onPress={loginInfo.email.length > 0 && loginInfo.password.length > 0 ? onLogin : onFalseLogin} style={[loginStyles.loginBtnContainer,]} >
         {!loginLoading ? <Text style={loginStyles.logintext} >Login</Text> : <ActivityIndicator color={'#FFF'} />}
       </TouchableOpacity>
       <View style={loginStyles.orContainer} >

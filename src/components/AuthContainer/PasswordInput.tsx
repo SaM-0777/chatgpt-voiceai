@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { Octicons } from '@expo/vector-icons';
 
@@ -15,10 +15,11 @@ type PasswordInputPropsType = {
   inputFor: string;
   text: accountInfoType;
   validate: boolean;
+  setInputValid: (o: boolean) => void;
   setText: (accountInfo: accountInfoType) => void;
 }
 
-export default function PasswordInput({ inputFor, text, setText, validate }: PasswordInputPropsType) {
+export default function PasswordInput({ inputFor, text, setText, validate, setInputValid }: PasswordInputPropsType) {
   const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{}|;':",./?<>]).{8,}$/
   const [secureEntry, setSecureEntry] = useState<boolean>(true)
   const [value, setValue] = useState<string>()
@@ -27,12 +28,18 @@ export default function PasswordInput({ inputFor, text, setText, validate }: Pas
   function handleChangeText(t: string) {
     if (t?.length && t?.length > 0) {
       setIsPasswordValid(pattern.test(t))
-      console.log(pattern.test(t))
     } else {
       setIsPasswordValid(true)
     }
     setText({...text, [inputFor]: t})
   }
+
+  useEffect(() => {
+    if (isPasswordValid && text.password.length > 0) setInputValid(true)
+    else setInputValid(false)
+    
+    return () => {}
+  }, [isPasswordValid])
 
   function onToggleSecureEntry() { setSecureEntry(prevState => !prevState) }
 

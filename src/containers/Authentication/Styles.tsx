@@ -126,7 +126,7 @@ export const loginStyles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 100,
     marginTop: 10,
-    backgroundColor: AppStyles.DarkColor,
+    backgroundColor: '#101010'
   },
   orContainer: {
     width: '100%',

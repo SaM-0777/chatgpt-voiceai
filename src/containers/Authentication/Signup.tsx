@@ -1,19 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator, ToastAndroid } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Checkbox } from 'react-native-paper';
 import { SvgXml } from 'react-native-svg';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import { SignupHeader, InputArea, PasswordInput } from '../../components';
-import { GoogleLogo, FacebookLogo } from '../../svg';
-
-import { register } from '../../utils/api';
+import { GoogleLogo } from '../../svg';
 
 // import AppStyles from '../../AppStyles';
 import { signupStyles } from './Styles';
-import AppStyles from '../../AppStyles';
 
 
 type SignupPropsType = {
@@ -27,12 +22,18 @@ type SignupType = {
   password: string;
 };
 
+type SignupInfoValid = {
+  email: false;
+  password: false;
+}
+
 export default function Signup({ loading, setLoading }: SignupPropsType) {
   const [signupLoading, setSignupLoading] = useState<boolean>(false)
   const [googleSignInLoading, setGoogleSignInLoading] = useState<boolean>(false)
   const [facebookSignInLoading, setFacebookSignInLoading] = useState<boolean>(false)
   const [signupInfo, setSignupInfo] = useState<SignupType>({ email: "", password: "" })
-  const [isEmailValid, setIsEmailValid] = useState<boolean>(false)
+  const [isEmailValid, setsIsEmailValid] = useState<boolean>(false)
+  const [isPasswordValid, setIsPasswordValid] = useState<boolean>(false)
 
   async function signup() {
     setSignupLoading(true)
@@ -61,13 +62,15 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
       }
       if (error.code === 'auth/invalid-email') {
         ToastAndroid.show('That email address is invalid!', ToastAndroid.LONG)
+      } else {
+        ToastAndroid.show('Something went wrong. Try again later!', ToastAndroid.LONG)
       }
-      console.log(error)
-      ToastAndroid.show("Something went wrong. Try Again later", ToastAndroid.LONG)
       setSignupLoading(false)
       setLoading(false)
     })
   }
+
+  function onFalseSignUp() { ToastAndroid.show('Provide correct signup details', ToastAndroid.SHORT) }
 
   // Google signin
   async function googleSignIn() {
@@ -118,11 +121,11 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
   return (
     <View style={signupStyles.container} >
       <SignupHeader />
-      <InputArea inputFor='email' text={signupInfo!} setText={setSignupInfo} validate={true} />
+      <InputArea inputFor='email' text={signupInfo!} setText={setSignupInfo} validate={true} setInputValid={setsIsEmailValid} />
       <View style={{ alignSelf: 'flex-start', marginBottom: 7, }} >
         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 12, color: '#a0a0a0' }} >You'll need to verify that you own this email account.</Text>
       </View>
-      <PasswordInput inputFor='password' text={signupInfo!} setText={setSignupInfo} validate={true} />
+      <PasswordInput inputFor='password' text={signupInfo!} setText={setSignupInfo} validate={true} setInputValid={setIsPasswordValid} />
       <View style={{ alignSelf: 'flex-start', marginBottom: 7, }} >
         <Text style={{ fontFamily: "PoppinsRegular", fontSize: 12, color: '#a0a0a0', textAlign: 'justify' }} >Strong password must have at least 8 characters and contains a mix of lowercase and uppercase letters, digits, and special characters.</Text>
       </View>
@@ -135,7 +138,7 @@ export default function Signup({ loading, setLoading }: SignupPropsType) {
           <Text style={{ textDecorationLine: 'underline' }} > Terms of use.</Text>
         </Text>
       </View>*/}
-      <TouchableOpacity disabled={loading || signupLoading || googleSignInLoading || facebookSignInLoading} activeOpacity={0.95} onPress={signup} style={signupStyles.signupBtnContainer} >
+      <TouchableOpacity disabled={loading || signupLoading || googleSignInLoading || facebookSignInLoading} activeOpacity={0.95} onPress={isEmailValid && isPasswordValid ? signup : onFalseSignUp} style={signupStyles.signupBtnContainer} >
         {!signupLoading ? <Text style={signupStyles.signuptext} >Signup</Text> : <ActivityIndicator color={'#FFF'} />}
       </TouchableOpacity>
       <View style={signupStyles.orContainer} >
