@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "353419538082-vfb67gk00jb55mfqg7eo2a20ssbtj38v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.realm.askai",
+            "certificate_hash": "b31b4315134427433fc0d4f1956425917798931b"
+          }
+        },
+        {
           "client_id": "353419538082-sjhsmtkkjov0uq6lqat71aigv27k0r6p.apps.googleusercontent.com",
           "client_type": 3
         }

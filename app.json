@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ask AI",
     "slug": "askai",
-    "version": "2.0.1",
+    "version": "2.1.1",
     "orientation": "portrait",
     "scheme": "com.realm.askai",
     "icon": "./assets/images/icon-ps.png",
@@ -21,7 +21,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 7,
+      "versionCode": 8,
       "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
