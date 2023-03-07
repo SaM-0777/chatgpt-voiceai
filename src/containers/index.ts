@@ -2,7 +2,7 @@ import OnBoarding from "./OnBoarding";
 import Auth from "./Authentication";
 import Chat from "./Chat";
 import MicrophoneModal from "./MicrophoneModal";
-import Message from "./ChatScreen";
+import { Message, Header } from "./ChatScreen";
 import VerifyEmailModal from "./VerifyEmail";
 
 
@@ -12,6 +12,7 @@ export {
   Chat,
   MicrophoneModal,
   Message,
+  Header,
   VerifyEmailModal,
 };
 

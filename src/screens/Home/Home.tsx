@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Dimensions, ToastAndroid } from 'react-native';
+import { View, Dimensions, ToastAndroid, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { useSharedValue, useAnimatedStyle, FadeIn, runOnJS, withTiming, FadeOut, } from 'react-native-reanimated';
@@ -117,19 +117,21 @@ export default function Home({ navigation }: HomePropsType) {
         />
       </Animated.View>
       <View style={[Styles.wrapper]} >
-        {!initializing && (
-          <>
-            {user ?
-              <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                <Chat navigation={navigation} />
-              </Animated.View>
-              :
-              <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                <Auth />
-              </Animated.View>
-            }
-          </>
-        )}
+        <ScrollView scrollEnabled style={{ flexGrow: 1 }} contentContainerStyle={{ flex: 1, flexGrow: 1 }} >
+          {!initializing && (
+            <>
+              {user ?
+                <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
+                  <Chat navigation={navigation} />
+                </Animated.View>
+                :
+                <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
+                  <Auth />
+                </Animated.View>
+              }
+            </>
+          )}
+        </ScrollView>
       </View>
     </View>
   )

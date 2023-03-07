@@ -33,3 +33,23 @@ export const messageStyles = StyleSheet.create({
   },
 });
 
+export const headerStyles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: 64,
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    backgroundColor: '#000',
+  },
+  wrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 1000,
+    marginLeft: 10,
+  },
+});
+

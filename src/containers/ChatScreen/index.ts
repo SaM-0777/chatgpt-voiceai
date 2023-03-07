@@ -1,5 +1,8 @@
 import Message from "./Message";
+import Header from "./Header";
 
-
-export default Message;
+export {
+  Message,
+  Header,
+};
 

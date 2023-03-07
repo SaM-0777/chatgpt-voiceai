@@ -8,7 +8,7 @@ import auth from "@react-native-firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { MicrophoneModal } from "../../containers";
-import { Message, VerifyEmailModal } from "../../containers";
+import { Message, VerifyEmailModal, Header } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
 import { getPreviousChats } from "../../utils/api";
@@ -167,7 +167,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
 
   return (
     <SafeAreaView style={{ flexGrow: 1, backgroundColor: "#FFFFFF", }} >
-      <StatusBar style="auto" backgroundColor="#FFFFFF" />
+      <StatusBar style="light" backgroundColor="#000" translucent />
       {isEmailVerifyModal ?
           <VerifyEmailModal onPressLater={closeVerifyEmailmodal} messageLength={messages.length} />
         :
@@ -182,6 +182,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
               :
                 <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={48} >
                   <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
+                    <Header />
                     <FlashList
                       data={messages}
                       renderItem={({ item }) => <Message message={item} />}
