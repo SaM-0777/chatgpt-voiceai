@@ -145,7 +145,14 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     return () => {}
   }, [])
 
-  function closeVerifyEmailmodal() { setIsEmailVerifyModal(false) }
+  async function closeVerifyEmailmodal() {
+    setIsEmailVerifyModal(false)
+    if (messages.length === 0) {
+      await getUserChats()
+    } else {
+      setLoading(false)
+    }
+  }
 
   // keyboard offset
   useEffect(() => {
