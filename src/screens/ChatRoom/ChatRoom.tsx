@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { useState, useEffect } from "react";
 import { View, Text, ToastAndroid, KeyboardAvoidingView, ScrollView, Keyboard, TouchableOpacity, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import LottieView from 'lottie-react-native';
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
 import auth from "@react-native-firebase/auth";
@@ -172,9 +173,12 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
           <>
             {loading ?
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
-                  <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 110, height: 50, backgroundColor: '#000', borderRadius: 10, }} >
-                    <ActivityIndicator color="white" size={"small"} />
-                    <Text style={{ fontFamily: "PoppinsRegular", marginLeft: 10, color: "#FFF", fontSize: 15, }} >Loading</Text>
+                  <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 0.5 * Dimensions.get('window').width, aspectRatio: 1, }} >
+                    <LottieView
+                      source={require('../../animations/ai-animation.json')}
+                      autoPlay
+                      loop
+                    />
                   </View>
                 </View>
               :
