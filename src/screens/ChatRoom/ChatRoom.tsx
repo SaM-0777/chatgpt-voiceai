@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
 import auth from "@react-native-firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // import { MicrophoneModal } from "../../containers";
 import { Message, VerifyEmailModal, Header } from "../../containers";
@@ -54,7 +53,6 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   const [loading, setLoading] = useState(true)
   const [isEmailVerifyModal, setIsEmailVerifyModal] = useState<boolean>(false)
   // const [responseLoading, setResponseLoading] = useState(false)
-  const [token, setToken] = useState<string>()
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
   const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -108,7 +106,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         user: {
           _id: "",
           name: "",
-          avatar: require("../../../assets/images/bot-280.jpg"),
+          // avatar: require("../../../assets/images/bot-280.jpg"),
         },
       }
 
@@ -187,8 +185,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
                       data={messages}
                       renderItem={({ item }) => <Message message={item} />}
                       inverted
-                      estimatedItemSize={850}
-                                    
+                      estimatedItemSize={850}        
                       // stickyHeaderHiddenOnScroll={false}
                       // StickyHeaderComponent={() => }
                     />
