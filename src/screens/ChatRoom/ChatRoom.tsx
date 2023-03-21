@@ -56,7 +56,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
   // const [responseLoading, setResponseLoading] = useState(false)
   const [userMessage, setUserMessage] = useState<string>(route?.params?.initialValue)
   const [messages, setMessages] = useState<IMessage[]>([])
-  const [keyboardHeight, setKeyboardHeight] = useState(0);
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   // get previous chats
   async function getUserChats() {
@@ -191,7 +191,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
               :
                 <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={48} >
                   <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
-                    <Header />
+                    <Header setMessage={setUserMessage} />
                     <FlashList
                       data={messages}
                       renderItem={({ item }) => <Message message={item} />}

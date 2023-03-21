@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, ToastAndroid, TouchableOpacity, } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, ToastAndroid, TouchableOpacity, Dimensions } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import AppStyles from "../../AppStyles";
@@ -27,18 +27,22 @@ export interface IMessage {
 };
 
 type MessagePropsType = {
-  message: IMessage
+  message: IMessage,
 };
 
-export default function Message({ message }: MessagePropsType) {
+export default function Message({ message, }: MessagePropsType) {
   const hh = new Date(message.createdAt).getHours()
   const mm = new Date(message.createdAt).getMinutes()
+  const [isLongPressed, setIsLongPressed] = useState<boolean>(false)
 
   const time = (hh < 10 ? "0" : "") + hh + ":" + (mm < 10 ? "0" : "") + mm
 
   function onLongPressMessage() {
-    Clipboard.setStringAsync(message.text);
+    //console.log("Pressed")
+    
+    Clipboard.setStringAsync(message.text)
     ToastAndroid.show('Message Copied', ToastAndroid.SHORT)
+    //setIsLongPressed(true)
   }
 
   return (

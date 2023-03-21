@@ -6,6 +6,7 @@ import GoogleLogo from "./GoogleLogo";
 import FacebookLogo from "./FacebookLogo";
 import CreateProfileMask from "./CreateProfileMask";
 import Welcome from "./Welcome";
+import CameraOverlay from "./CameraOverlay";
 
 
 export {
@@ -17,5 +18,6 @@ export {
     FacebookLogo,
     CreateProfileMask,
     Welcome as WelcomeMask,
+    CameraOverlay,
 };
 

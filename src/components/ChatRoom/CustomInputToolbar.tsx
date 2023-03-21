@@ -106,7 +106,7 @@ export default function CustomInputToolbar({userMessage, setUserMessage, setMess
       </View>
       {!responseLoading ?
         <TouchableOpacity activeOpacity={1} disabled={responseLoading} onPress={onPress} style={[CustomInputToolbarStyle.textToolbarIcon]} >
-          <MaterialCommunityIcons name="send" size={25} color={"white"} />
+          <MaterialCommunityIcons name="send" size={21} color={"white"} />
         </TouchableOpacity>
         :
         <View style={CustomInputToolbarStyle.textToolbarLoadingIcon} >

@@ -21,7 +21,7 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 9,
+      "versionCode": 10,
       "package": "com.realm.askai",
       "softwareKeyboardLayoutMode": "pan",
       "googleServicesFile": "./google-services.json",
@@ -40,7 +40,19 @@
     },
     "plugins": [
       "@react-native-firebase/app",
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Ask AI to access photos."
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow Ask AI to access your camera."
+        }
+      ]
     ]
   }
 }

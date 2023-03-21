@@ -44,12 +44,17 @@ export const headerStyles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
   image: {
     width: 40,
     height: 40,
     borderRadius: 1000,
     marginLeft: 10,
+  },
+  utilsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
