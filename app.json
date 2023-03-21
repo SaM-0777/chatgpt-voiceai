@@ -2,7 +2,7 @@
   "expo": {
     "name": "Ask AI",
     "slug": "askai",
-    "version": "2.1.2",
+    "version": "2.2.0",
     "orientation": "portrait",
     "scheme": "com.realm.askai",
     "icon": "./assets/images/icon-ps.png",
