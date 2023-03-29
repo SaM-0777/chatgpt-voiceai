@@ -7,7 +7,9 @@ import { ActivityIndicator } from "react-native-paper";
 import { FlashList } from "@shopify/flash-list";
 import auth from "@react-native-firebase/auth";
 
+
 // import { MicrophoneModal } from "../../containers";
+import CameraScreen from "../CameraScreen";
 import { Message, VerifyEmailModal, Header } from "../../containers";
 import { CustomInputToolbar } from "../../components";
 
@@ -51,6 +53,7 @@ export interface IChat {
 };
 
 export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
+  const [isCamera, setIsCamera] = useState<boolean>(false)
   const [loading, setLoading] = useState(true)
   const [isEmailVerifyModal, setIsEmailVerifyModal] = useState<boolean>(false)
   // const [responseLoading, setResponseLoading] = useState(false)
@@ -132,6 +135,8 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
     setMessages(formatedMessages)
   }
 
+  function closeImageScreen() { setIsCamera(false) }
+
   // check if user-email is verified
   useEffect(() => {
     if (!auth().currentUser?.emailVerified) {
@@ -189,20 +194,26 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
                   </View>
                 </View>
               :
-                <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={48} >
-                  <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
-                    <Header setMessage={setUserMessage} />
-                    <FlashList
-                      data={messages}
-                      renderItem={({ item }) => <Message message={item} />}
-                      inverted
-                      estimatedItemSize={850}        
-                      // stickyHeaderHiddenOnScroll={false}
-                      // StickyHeaderComponent={() => }
-                    />
-                    <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} />
-                  </View>
-                </KeyboardAvoidingView>
+                <>
+                  {isCamera ? 
+                    <CameraScreen closeImageScreen={closeImageScreen} setMessage={setUserMessage} />
+                    :
+                    <KeyboardAvoidingView style={{ flex: 1 }} behavior="height" keyboardVerticalOffset={48} >
+                      <View style={{ flex: 1, paddingBottom: 10, position: 'relative' }} >
+                        <Header activateCamera={setIsCamera} />
+                        <FlashList
+                          data={messages}
+                          renderItem={({ item }) => <Message message={item} />}
+                          inverted
+                          estimatedItemSize={850}        
+                          // stickyHeaderHiddenOnScroll={false}
+                          // StickyHeaderComponent={() => }
+                        />
+                        <CustomInputToolbar userMessage={userMessage} setUserMessage={setUserMessage} setMessages={setMessages} />
+                      </View>
+                    </KeyboardAvoidingView>
+                  }
+                </>
             }
           </>
       }

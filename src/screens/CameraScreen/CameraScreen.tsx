@@ -6,17 +6,22 @@ import { Camera, CameraType, PermissionResponse } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
+import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { Ionicons } from '@expo/vector-icons';
 
 import { CameraOverlay } from '../../svg';
 
 import Styles from './Styles';
-import TextRecognition from '@react-native-ml-kit/text-recognition';
 
 
-export default function CameraScreen() {
+type CameraScreenPropsType = {
+  setMessage: (text: string) => void;
+  closeImageScreen: () => void;
+};
+
+export default function CameraScreen({ setMessage, closeImageScreen }: CameraScreenPropsType) {
   const navigation = useNavigation()
-  const [image, setImage] = useState<string | null>(null)
+  const [image, setImage] = useState<string>("")
   const [hasCameraPermission, setHasCameraPermission] = useState<PermissionResponse | null>(null)
   const [hasImagePickerPermission, setHasImagePickerPermission] = useState(null)
   const [cameraType, setCameraType] = useState(CameraType.back)
@@ -38,6 +43,8 @@ export default function CameraScreen() {
       const options = { quality: 1, base64: true, exif: true, allowsEditing: true }
       const data = await cameraRef.current.takePictureAsync(options)
       setImage(data.uri)
+      console.log("ImageN: ", image)
+      await getTextFromImage(image)
     }
   }
 
@@ -52,22 +59,24 @@ export default function CameraScreen() {
 
     if (!result.canceled) {      
       setImage(result.assets[0].uri)
-      //const imageText = await TextRecognition.recognize(result.assets[0].uri)
-      //let text = ""
-      //for (let block of imageText.blocks) {
-      //  // console.log('Block text:', block.text)
-      //  // text = text + block.text
-      //  //console.log('Block frame:', block.frame)
+      const imageText = await TextRecognition.recognize(result.assets[0].uri)
+      let text = ""
+      for (let block of imageText.blocks) {
+        // console.log('Block text:', block.text)
+        // text = text + block.text
+        //console.log('Block frame:', block.frame)
         
-      //  for (let line of block.lines) {
-      //    text = text + line.text + " "
-      //    // console.log('Line text:', line.text)
-      //    // console.log('Line frame:', line.frame)
-      //  }
-      //}
-      //console.log("Recognozed Text: ", text)
-      //setMessage(text)
-      // setImage(result.assets[0].uri)
+        for (let line of block.lines) {
+          text = text + line.text + " "
+          // console.log('Line text:', line.text)
+          // console.log('Line frame:', line.frame)
+        }
+      }
+      setMessage(text)
+      console.log("Recognozed Text: ", text)
+      // setMessage(text)
+      closeImageScreen()
+      setImage(result.assets[0].uri)
     }
   }
 
@@ -86,18 +95,17 @@ export default function CameraScreen() {
       }
     }
     //console.log("Recognozed Text: ", text)
-    navigation.navigate("chat-room", {
-      initialValue: text
-    })
+    setMessage(text)
+    closeImageScreen()
   }
 
-  useEffect(() => {
-    if (image !== null && typeof image === 'string') {
-      (async () => getTextFromImage(image))()
-    }
+  //useEffect(() => {
+  //  if (image !== null && typeof image === 'string') {
+  //    (async () => getTextFromImage(image))()
+  //  }
 
-    return () => {}
-  }, [image])
+  //  return () => {}
+  //}, [image])
   
   return (
     <SafeAreaView style={Styles.container} >
@@ -108,20 +116,26 @@ export default function CameraScreen() {
         hasCameraPermission.granted === false ? (<Text style={{ color: '#000', fontSize: 20, fontFamily: "PoppinsRegular", }} >No access to camera</Text>)
         :
         <View style={Styles.container} >
-          <Camera style={Styles.cameraContainer} type={cameraType} ref={cameraRef} ratio="4:3" >
+          <Camera
+            ref={cameraRef}
+            style={Styles.cameraContainer}
+            type={CameraType.back}
+            // type={RNCamera.Constants.Type.back}
+            // onTextRecognized={{}}
+          >
             <View style={Styles.cameraOverlayContainer} >
               <CameraOverlay />
             </View>
-            </Camera>
-            <View style={Styles.controlsContainer} >
-              <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
-                <Ionicons name="images" size={36} color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
-                <View style={Styles.btnCenter} />
-              </TouchableOpacity>
-              <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
-            </View>
+          </Camera>
+          <View style={Styles.controlsContainer} >
+            <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
+              <Ionicons name="images" size={36} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
+              <View style={Styles.btnCenter} />
+            </TouchableOpacity>
+            <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
+          </View>
         </View>
       }
     </SafeAreaView>

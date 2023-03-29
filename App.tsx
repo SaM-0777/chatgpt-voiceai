@@ -4,8 +4,11 @@ import { StyleSheet } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFonts } from 'expo-font';
+import { Provider } from "react-redux";
 
 import Root from './src';
+
+import store from "./src/store";
 
 
 export default function App() {

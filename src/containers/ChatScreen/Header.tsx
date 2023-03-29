@@ -13,10 +13,10 @@ import { StatusBar } from 'expo-status-bar';
 
 
 type HeaderPropsType = {
-  setMessage: (s: string) => void;
-}
+  activateCamera: (o: boolean) => void;
+};
 
-export default function Header({ setMessage }: HeaderPropsType) {
+export default function Header({ activateCamera }: HeaderPropsType) {
   const navigation = useNavigation<any>()
 
   //async function handlePickImage() {
@@ -49,7 +49,7 @@ export default function Header({ setMessage }: HeaderPropsType) {
   //}
 
   function handleNavigateToCameraScreen() {
-    navigation.navigate("camera-screen", {})
+    activateCamera(true)
   }
 
   function onPressBack() {
