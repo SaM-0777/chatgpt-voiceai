@@ -8,6 +8,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Permissions from 'expo-permissions';
 import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { Ionicons } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 
 import { CameraOverlay } from '../../svg';
 
@@ -43,8 +44,8 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
       const options = { quality: 1, base64: true, exif: true, allowsEditing: true }
       const data = await cameraRef.current.takePictureAsync(options)
       setImage(data.uri)
-      console.log("ImageN: ", image)
-      await getTextFromImage(image)
+      // console.log("ImageN: ", image)
+      await getTextFromImage(data.uri)
     }
   }
 
@@ -109,32 +110,34 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
   
   return (
     <SafeAreaView style={Styles.container} >
-      <StatusBar translucent backgroundColor='transparent' />
+      <StatusBar style='light' translucent backgroundColor='#000' />
+      {hasCameraPermission && (
+        <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
+          {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
+          <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
+
+        </View>)}
       {hasCameraPermission === null ?
         (<ActivityIndicator color={'#000'} />)
         :
         hasCameraPermission.granted === false ? (<Text style={{ color: '#000', fontSize: 20, fontFamily: "PoppinsRegular", }} >No access to camera</Text>)
         :
         <View style={Styles.container} >
-          <Camera
-            ref={cameraRef}
-            style={Styles.cameraContainer}
-            type={CameraType.back}
-            // type={RNCamera.Constants.Type.back}
-            // onTextRecognized={{}}
-          >
+          <Camera ref={cameraRef} style={Styles.cameraContainer} type={CameraType.back} ratio={'4:3'} autoFocus >
             <View style={Styles.cameraOverlayContainer} >
               <CameraOverlay />
             </View>
           </Camera>
-          <View style={Styles.controlsContainer} >
-            <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
-              <Ionicons name="images" size={36} color="white" />
-            </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
-              <View style={Styles.btnCenter} />
-            </TouchableOpacity>
-            <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
+          <View style={{ flex: 0.2, width: Dimensions.get('window').width, alignItems: 'center', justifyContent: 'center' }} >
+            <View style={Styles.controlsContainer} >
+              <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
+                <Ionicons name="images" size={36} color="white" />
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
+                <View style={Styles.btnCenter} />
+              </TouchableOpacity>
+              <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
+            </View>
           </View>
         </View>
       }
