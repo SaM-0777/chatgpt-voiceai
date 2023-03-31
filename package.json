@@ -22,7 +22,7 @@
     "deprecated-react-native-prop-types": "^4.0.0",
     "expo": "~47.0.12",
     "expo-application": "~5.0.1",
-    "expo-auth-session": "~3.8.0",
+    "expo-auth-session": "~4.0.3",
     "expo-camera": "~13.1.0",
     "expo-clipboard": "~4.0.1",
     "expo-dev-client": "~2.0.1",
