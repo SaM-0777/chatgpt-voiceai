@@ -34,11 +34,11 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
   async function checkIsModalShown() {
     try {
       const response = await AsyncStorage.getItem("@isModalShown")
-      console.log("response: ", response)
+      //console.log("response: ", response)
       if (response !== null) {
         // value previously stored
         const jsonValue = JSON.parse(response)
-        console.log("jsonValue: ", jsonValue)
+        //console.log("jsonValue: ", jsonValue)
         
         setIsModalShownAlready(jsonValue)
       } else {
@@ -149,7 +149,7 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
       {isModalShownAlready === false ? <Modal onPressOk={storeIsModalShown} />
         :
         <>
-          {hasCameraPermission && (
+          {hasCameraPermission && (isModalShownAlready === true) && (
             <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
               {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
               <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
