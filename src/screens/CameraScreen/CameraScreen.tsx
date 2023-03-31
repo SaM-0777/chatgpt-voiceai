@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ActivityIndicator, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ActivityIndicator, Dimensions, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, CameraType, PermissionResponse } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -10,6 +11,7 @@ import TextRecognition from '@react-native-ml-kit/text-recognition';
 import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 
+import { Modal } from '../../containers';
 import { CameraOverlay } from '../../svg';
 
 import Styles from './Styles';
@@ -27,6 +29,39 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
   const [hasImagePickerPermission, setHasImagePickerPermission] = useState(null)
   const [cameraType, setCameraType] = useState(CameraType.back)
   const [scannedText, setScannedText] = useState(null)
+  const [isModalShownAlready, setIsModalShownAlready] = useState<boolean>()
+
+  async function checkIsModalShown() {
+    try {
+      const response = await AsyncStorage.getItem("@isModalShown")
+      console.log("response: ", response)
+      if (response !== null) {
+        // value previously stored
+        const jsonValue = JSON.parse(response)
+        console.log("jsonValue: ", jsonValue)
+        
+        setIsModalShownAlready(jsonValue)
+      } else {
+        setIsModalShownAlready(false)
+      }
+    } catch (error) {
+      
+    }
+  }
+  async function storeIsModalShown() {
+    try {
+      await AsyncStorage.setItem("@isModalShown", JSON.stringify(true))
+      setIsModalShownAlready(true)
+    } catch (error) {
+      
+    }
+  }
+
+  useEffect(() => {
+    (async () => await checkIsModalShown())()
+
+    return () => {}
+  }, [])
 
   useEffect(() => {
     (async () => {
@@ -111,35 +146,44 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
   return (
     <SafeAreaView style={Styles.container} >
       <StatusBar style='light' translucent backgroundColor='#000' />
-      {hasCameraPermission && (
-        <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
-          {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
-          <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
-
-        </View>)}
-      {hasCameraPermission === null ?
-        (<ActivityIndicator color={'#000'} />)
+      {isModalShownAlready === false ? <Modal onPressOk={storeIsModalShown} />
         :
-        hasCameraPermission.granted === false ? (<Text style={{ color: '#000', fontSize: 20, fontFamily: "PoppinsRegular", }} >No access to camera</Text>)
-        :
-        <View style={Styles.container} >
-          <Camera ref={cameraRef} style={Styles.cameraContainer} type={CameraType.back} ratio={'4:3'} autoFocus >
-            <View style={Styles.cameraOverlayContainer} >
-              <CameraOverlay />
-            </View>
-          </Camera>
-          <View style={{ flex: 0.2, width: Dimensions.get('window').width, alignItems: 'center', justifyContent: 'center' }} >
-            <View style={Styles.controlsContainer} >
-              <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
-                <Ionicons name="images" size={36} color="white" />
-              </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
-                <View style={Styles.btnCenter} />
-              </TouchableOpacity>
-              <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
-            </View>
-          </View>
-        </View>
+        <>
+          {hasCameraPermission && (
+            <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
+              {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
+              <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
+    
+            </View>)}
+          {hasCameraPermission === null ?
+            (<ActivityIndicator color={'#000'} />)
+            :
+            hasCameraPermission.granted === false ? (<Text style={{ color: '#000', fontSize: 20, fontFamily: "PoppinsRegular", }} >No access to camera</Text>)
+            :
+            <>
+              {(isModalShownAlready === true) && (
+                <View style={Styles.container} >
+                  <Camera ref={cameraRef} style={Styles.cameraContainer} type={CameraType.back} ratio={'4:3'} autoFocus useCamera2Api >
+                    <View style={Styles.cameraOverlayContainer} >
+                      <CameraOverlay />
+                    </View>
+                  </Camera>
+                  <View style={{ flex: 0.2, width: Dimensions.get('window').width, alignItems: 'center', justifyContent: 'center' }} >
+                    <View style={Styles.controlsContainer} >
+                      <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
+                        <Ionicons name="images" size={36} color="white" />
+                      </TouchableOpacity>
+                      <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
+                        <View style={Styles.btnCenter} />
+                      </TouchableOpacity>
+                      <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
+                    </View>
+                  </View>
+                </View>
+              )}
+            </>
+          }
+        </>
       }
     </SafeAreaView>
   )
