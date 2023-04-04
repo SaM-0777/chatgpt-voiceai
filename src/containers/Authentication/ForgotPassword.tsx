@@ -16,16 +16,21 @@ type ForgotPasswordPropsType = {
 
 export default function ForgotPassword({ loading, setLoading }: ForgotPasswordPropsType) {
   const [email, setEmail] = useState<string>("")
+  const [isEmailValid, setIsEmailValid] = useState<boolean>(false)
 
   async function onPress() {
-    setLoading(true)
-    auth().sendPasswordResetEmail(email).then(function(user) {
-      ToastAndroid.show("An email has been send with instructions. Make sure to check the SPAM folders.", ToastAndroid.LONG)
-      setLoading(false)
-    }).catch(function(error) {
-      console.log(error)
-      setLoading(false)
-    })
+    if (email.length >= 1 && isEmailValid) {
+      setLoading(true)
+      auth().sendPasswordResetEmail(email).then(function(user) {
+        ToastAndroid.show("An email has been send with instructions. Make sure to check the SPAM folders.", ToastAndroid.LONG)
+        setLoading(false)
+      }).catch(function(error) {
+        console.log(error)
+        setLoading(false)
+      })
+    } else {
+      ToastAndroid.show('Provide a valid Email', ToastAndroid.SHORT)
+    }
     /*const response = await forgot(email)
     if (typeof response === 'string') {
       ToastAndroid.show(response, ToastAndroid.LONG)
@@ -38,7 +43,7 @@ export default function ForgotPassword({ loading, setLoading }: ForgotPasswordPr
     <View style={forgotPasswordStyles.container} >
       <ForgotPasswordHeader />
       <View style={{ marginTop: 10, justifyContent: 'center', alignItems: 'center', }} >
-        <ForgotPasswordEmailInput setText={setEmail} />
+        <ForgotPasswordEmailInput setText={setEmail} setIsEmailValid={setIsEmailValid} />
         <TouchableOpacity disabled={loading} activeOpacity={0.95} onPress={onPress} style={forgotPasswordStyles.btnContainer} >
           {!loading ? <Text style={forgotPasswordStyles.logintext} >Submit</Text> : <ActivityIndicator color={'#FFF'} />}
         </TouchableOpacity>

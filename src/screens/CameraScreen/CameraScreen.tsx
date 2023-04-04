@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, Text, ActivityIndicator, Dimensions, TouchableOpacity, Image, ToastAndroid } from 'react-native';
+import { View, Text, ActivityIndicator, Dimensions, TouchableOpacity, Image, ToastAndroid, BackHandler } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Camera, CameraType, PermissionResponse } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
@@ -61,6 +61,17 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
     (async () => await checkIsModalShown())()
 
     return () => {}
+  }, [])
+
+  useEffect(() => {
+    function backAction() {
+      closeImageScreen()
+      return true
+    }
+
+    const handleBack = BackHandler.addEventListener('hardwareBackPress', backAction)
+
+    return () => handleBack.remove()
   }, [])
 
   useEffect(() => {
@@ -149,20 +160,18 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
       {isModalShownAlready === false ? <Modal onPressOk={storeIsModalShown} />
         :
         <>
-          {hasCameraPermission && (isModalShownAlready === true) && (
-            <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
-              {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
-              <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
-    
-            </View>)}
           {hasCameraPermission === null ?
-            (<ActivityIndicator color={'#000'} />)
+            (<ActivityIndicator color={'#FFF'} />)
             :
-            hasCameraPermission.granted === false ? (<Text style={{ color: '#000', fontSize: 20, fontFamily: "PoppinsRegular", }} >No access to camera</Text>)
+            hasCameraPermission.granted === false ? (<Text style={{ color: '#FFF', fontSize: 20, fontFamily: "PoppinsRegular", }} >No access to camera</Text>)
             :
             <>
               {(isModalShownAlready === true) && (
                 <View style={Styles.container} >
+                  <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
+                    {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
+                    <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
+                  </View>  
                   <Camera ref={cameraRef} style={Styles.cameraContainer} type={CameraType.back} ratio={'4:3'} autoFocus useCamera2Api >
                     <View style={Styles.cameraOverlayContainer} >
                       <CameraOverlay />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, TextInput } from 'react-native';
 import { Octicons, } from '@expo/vector-icons';
 
@@ -10,12 +10,20 @@ type InputAreaPropsType = {
   // inputFor: string;
   // text: string;
   setText: (email: string) => void;
+  setIsEmailValid: (o: boolean) => void;
 };
 
-export default function ForgotPasswordEmailInput({ setText }: InputAreaPropsType) {
+export default function ForgotPasswordEmailInput({ setText, setIsEmailValid }: InputAreaPropsType) {
+  const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
   const [value, setValue] = useState<string>()
+  
 
   function handleChangeText(t:string) {
+    if (t?.length && t?.length > 0) {
+      setIsEmailValid(pattern.test(t))
+    } else {
+      setIsEmailValid(true)
+    }
     setText(t)
   }
 

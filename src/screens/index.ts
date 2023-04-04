@@ -3,6 +3,7 @@ import ChatRoom from "./ChatRoom";
 import Settings from "./Settings";
 import ChangePassword from "./ChangePassword";
 import CameraScreen from "./CameraScreen";
+//import PrivacyPolicy from "./PrivacyPolicy";
 
 
 export {
@@ -11,5 +12,6 @@ export {
   Settings,
   ChangePassword,
   CameraScreen,
+  //PrivacyPolicy,
 };
 

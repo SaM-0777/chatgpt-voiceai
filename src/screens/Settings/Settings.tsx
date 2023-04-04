@@ -30,7 +30,7 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
     })
   }
 
-  function onPressChangePassword() {
+  async function onPressChangePassword() {
     // if (!loading) navigation.navigate('change-password')
     setChangePasswordLoading(true)
     auth().sendPasswordResetEmail(auth().currentUser?.email!).then(() => {
@@ -49,6 +49,8 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
     })
   }
 
+  function onPressPrivacyPolicy() { navigation.navigate('privacy-policy') }
+
   return (
     <View style={Styles.container} >
       <View style={Styles.wrapper} >
@@ -66,6 +68,12 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
           </View>
           {loading && <ActivityIndicator color='#101010' />}
         </TouchableOpacity>
+        {/*<TouchableOpacity onPress={onPressPrivacyPolicy} activeOpacity={0.85} style={[Styles.btn, { justifyContent: 'space-between' }]} >
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
+            <MaterialIcons name="privacy-tip" size={24} color="black" />
+            <Text style={Styles.btnText} >Privacy Policy</Text>
+          </View>
+          </TouchableOpacity>*/}
       </View>
     </View>
   )
