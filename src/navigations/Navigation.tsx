@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { Home, ChatRoom, Settings, ChangePassword, PrivacyPolicy } from '../screens';
+import { Home, ChatRoom, Settings, ChangePassword, } from '../screens';
 
 
 const Stack = createNativeStackNavigator()

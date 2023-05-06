@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Dimensions, ToastAndroid, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BannerAd, BannerAdSize, BannerAdProps, TestIds } from 'react-native-google-mobile-ads';
 import Animated, { useSharedValue, useAnimatedStyle, FadeIn, runOnJS, withTiming, FadeOut, } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import { Octicons } from '@expo/vector-icons';
@@ -13,6 +13,8 @@ import { OnBoarding, Auth, Chat } from '../../containers';
 
 import Styles from './Styles';
 
+
+const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 
 type HomePropsType = {
   navigation: any;
@@ -133,6 +135,15 @@ export default function Home({ navigation }: HomePropsType) {
           )}
         </ScrollView>
       </View>
+      {/*<BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdFailedToLoad={() => <View></View>}
+        
+      />*/}
     </View>
   )
 };

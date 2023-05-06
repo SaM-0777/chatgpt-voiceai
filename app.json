@@ -52,7 +52,18 @@
         {
           "cameraPermission": "Allow Ask AI to access your camera."
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
       ]
     ]
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-1333780334100105~8628587374"
   }
 }

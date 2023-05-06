@@ -1,13 +1,27 @@
 import { View, StyleSheet } from 'react-native';
-
 import Navigation from './navigations';
+import mobileAds from 'react-native-google-mobile-ads';
+import { useEffect, useState } from 'react';
 
 
 export default function Root() {
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  useEffect(() => {
+    mobileAds()
+    .initialize()
+    .then(adapterStatuses => {
+      setIsInitialized(true)
+      // Initialization complete!
+    }).catch(() => setIsInitialized(true))
+  
+    return () => { }
+  }, [])
+  
 
   return (
     <View style={styles.container} >
-      <Navigation />
+      {isInitialized && <Navigation />}
     </View>
   )
 };
