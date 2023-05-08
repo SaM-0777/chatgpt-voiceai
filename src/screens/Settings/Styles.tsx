@@ -9,8 +9,9 @@ export default StyleSheet.create({
     backgroundColor: '#FFF',
   },
   wrapper: {
+    flex: 1,
     width: '100%',
-    paddingTop: 20,
+    // paddingTop: 20,
   },
   btn: {
     flexDirection: 'row',

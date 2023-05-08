@@ -2,11 +2,13 @@ import React, { useContext, useState } from 'react'
 import { View, Text, TouchableOpacity, ToastAndroid } from 'react-native'
 import { Octicons, MaterialIcons } from '@expo/vector-icons';
 import auth, { firebase } from '@react-native-firebase/auth';
+import { BannerAd, BannerAdSize, BannerAdProps, TestIds } from 'react-native-google-mobile-ads';
 
-import Styles from './Styles'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Styles from './Styles';
 import { ActivityIndicator } from 'react-native-paper';
 
+
+const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
 
 type SettingsPropsType = {
   route: any;
@@ -53,6 +55,15 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
 
   return (
     <View style={Styles.container} >
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdFailedToLoad={() => <View></View>}
+        
+      />
       <View style={Styles.wrapper} >
         <TouchableOpacity disabled={loading || changePasswordLoading} onPress={onPressChangePassword} activeOpacity={0.85} style={[Styles.btn, { justifyContent: 'space-between' }]} >
           <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
@@ -75,6 +86,15 @@ export default function Settings({ route, navigation }: SettingsPropsType) {
           </View>
           </TouchableOpacity>*/}
       </View>
+      <BannerAd
+        unitId={adUnitId}
+        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+        requestOptions={{
+          requestNonPersonalizedAdsOnly: true,
+        }}
+        onAdFailedToLoad={() => <View></View>}
+        
+      />
     </View>
   )
 };

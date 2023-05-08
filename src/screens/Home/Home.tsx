@@ -109,33 +109,35 @@ export default function Home({ navigation }: HomePropsType) {
   }, [])
 
   return (
-    <View style={[Styles.container,]} >
-      {user && <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: 10, right: 20 }} />}
-      <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
-        <LottieView
-          source={require('../../animations/ai-animation.json')}
-          autoPlay
-          loop
-        />
-      </Animated.View>
-      <View style={[Styles.wrapper]} >
-        <ScrollView scrollEnabled style={{ flexGrow: 1 }} contentContainerStyle={{ flex: 1, flexGrow: 1 }} >
-          {!initializing && (
-            <>
-              {user ?
-                <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                  <Chat navigation={navigation} />
-                </Animated.View>
-                :
-                <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
-                  <Auth />
-                </Animated.View>
-              }
-            </>
-          )}
-        </ScrollView>
+    <View style={[{ flex: 1 },]} >
+      <View style={[Styles.container,]} >
+        {user && <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: 10, right: 20 }} />}
+        <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
+          <LottieView
+            source={require('../../animations/ai-animation.json')}
+            autoPlay
+            loop
+          />
+        </Animated.View>
+        <View style={[Styles.wrapper]} >
+          <ScrollView scrollEnabled style={{ flexGrow: 1 }} contentContainerStyle={{ flex: 1, flexGrow: 1 }} >
+            {!initializing && (
+              <>
+                {user ?
+                  <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
+                    <Chat navigation={navigation} />
+                  </Animated.View>
+                  :
+                  <Animated.View entering={FadeIn.duration(300)} exiting={FadeOut.duration(200)} >
+                    <Auth />
+                  </Animated.View>
+                }
+              </>
+            )}
+          </ScrollView>
+        </View>
       </View>
-      {/*<BannerAd
+      <BannerAd
         unitId={adUnitId}
         size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
         requestOptions={{
@@ -143,7 +145,7 @@ export default function Home({ navigation }: HomePropsType) {
         }}
         onAdFailedToLoad={() => <View></View>}
         
-      />*/}
+      />
     </View>
   )
 };

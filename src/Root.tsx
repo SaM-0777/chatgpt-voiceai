@@ -1,10 +1,11 @@
-import { View, StyleSheet } from 'react-native';
-import Navigation from './navigations';
-import mobileAds from 'react-native-google-mobile-ads';
 import { useEffect, useState } from 'react';
+import { View, StyleSheet } from 'react-native';
+import mobileAds, { MaxAdContentRating } from 'react-native-google-mobile-ads';
+
+import Navigation from './navigations';
 
 
-export default function Root() {
+export default function Root(): JSX.Element {
   const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
@@ -17,7 +18,6 @@ export default function Root() {
   
     return () => { }
   }, [])
-  
 
   return (
     <View style={styles.container} >

@@ -30,6 +30,7 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
   const [cameraType, setCameraType] = useState(CameraType.back)
   const [scannedText, setScannedText] = useState(null)
   const [isModalShownAlready, setIsModalShownAlready] = useState<boolean>()
+  const [isScanTextLoading, setIsScanTextLoading] = useState<boolean>(false)
 
   async function checkIsModalShown() {
     try {
@@ -84,14 +85,16 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
     })()
   }, [])
 
-  const cameraRef = useRef(null)
+  const cameraRef = useRef<any>(null)
   const takePicture = async () => {
     if (cameraRef.current) {
+      setIsScanTextLoading(true)
       const options = { quality: 1, base64: true, exif: true, allowsEditing: true }
-      const data = await cameraRef.current.takePictureAsync(options)
+      const data = await cameraRef?.current?.takePictureAsync(options)
       setImage(data.uri)
       // console.log("ImageN: ", image)
       await getTextFromImage(data.uri)
+      setIsScanTextLoading(false)
     }
   }
 
@@ -104,7 +107,8 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
       quality: 1,
     })
 
-    if (!result.canceled) {      
+    if (!result.canceled) {
+      setIsScanTextLoading(true)
       setImage(result.assets[0].uri)
       const imageText = await TextRecognition.recognize(result.assets[0].uri)
       let text = ""
@@ -120,8 +124,9 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
         }
       }
       setMessage(text)
-      console.log("Recognozed Text: ", text)
+      //console.log("Recognozed Text: ", text)
       // setMessage(text)
+      setIsScanTextLoading(false)
       closeImageScreen()
       setImage(result.assets[0].uri)
     }
@@ -167,25 +172,36 @@ export default function CameraScreen({ setMessage, closeImageScreen }: CameraScr
             :
             <>
               {(isModalShownAlready === true) && (
-                <View style={Styles.container} >
-                  <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
-                    {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
-                    <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
-                  </View>  
-                  <Camera ref={cameraRef} style={Styles.cameraContainer} type={CameraType.back} ratio={'4:3'} autoFocus useCamera2Api >
-                    <View style={Styles.cameraOverlayContainer} >
-                      <CameraOverlay />
+                <View style={{ flex: 1 }} >
+                  {isScanTextLoading && (
+                    <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, flexDirection: "row", justifyContent: "center", alignItems: "center", flex: 1, width: Dimensions.get("window").width, height: Dimensions.get("window").height, zIndex: 10, }} >
+                      <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, flex: 1, width: Dimensions.get("window").width * 1.2, height: Dimensions.get("window").height, backgroundColor: "#000000", opacity: 0.8,  }} />
+                      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", backgroundColor: "#FFF", paddingHorizontal: 12, paddingVertical: 15, borderRadius: 10 }} >
+                        <ActivityIndicator color={"#000"} />
+                        <Text style={{ color: "#000", marginStart: 10,  }} >Scanning Texts...</Text>
+                      </View>
                     </View>
-                  </Camera>
-                  <View style={{ flex: 0.2, width: Dimensions.get('window').width, alignItems: 'center', justifyContent: 'center' }} >
-                    <View style={Styles.controlsContainer} >
-                      <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
-                        <Ionicons name="images" size={36} color="white" />
-                      </TouchableOpacity>
-                      <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} >
-                        <View style={Styles.btnCenter} />
-                      </TouchableOpacity>
-                      <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
+                  )}
+                  <Ionicons name='chevron-back' color={'#FFF'} size={25} onPress={closeImageScreen} />
+                  <View style={Styles.container} >
+                    <View style={{ width: Dimensions.get('window').width, alignItems: 'flex-start', paddingHorizontal: 20, paddingVertical: 20, }}  >
+                      {/*<AntDesign name="arrowleft" size={30} color="white" onPress={closeImageScreen} />*/}
+                    </View>  
+                    <Camera ref={cameraRef} style={Styles.cameraContainer} type={CameraType.back} ratio={'4:3'} autoFocus useCamera2Api >
+                      <View style={Styles.cameraOverlayContainer} >
+                        <CameraOverlay />
+                      </View>
+                    </Camera>
+                    <View style={{ flex: 0.2, width: Dimensions.get('window').width, alignItems: 'center', justifyContent: 'center' }} >
+                      <View style={Styles.controlsContainer} >
+                        <TouchableOpacity activeOpacity={0.9} onPress={handlePickImage} disabled={isScanTextLoading} style={[Styles.imageContainer, { backgroundColor: '#000' }]} >
+                          <Ionicons name="images" size={36} color="white" />
+                        </TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.9} style={Styles.btn} onPress={takePicture} disabled={isScanTextLoading} >
+                          <View style={Styles.btnCenter} />
+                        </TouchableOpacity>
+                        <View style={[Styles.imageContainer, { backgroundColor: 'transparent' }]} />
+                      </View>
                     </View>
                   </View>
                 </View>
