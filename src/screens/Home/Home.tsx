@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View, Dimensions, ToastAndroid, ScrollView } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import { BannerAd, BannerAdSize, BannerAdProps, TestIds } from 'react-native-google-mobile-ads';
 import Animated, { useSharedValue, useAnimatedStyle, FadeIn, runOnJS, withTiming, FadeOut, } from 'react-native-reanimated';
 import LottieView from 'lottie-react-native';
 import { Octicons } from '@expo/vector-icons';
@@ -12,9 +11,11 @@ import { useUser } from '../../utils';
 import { OnBoarding, Auth, Chat } from '../../containers';
 
 import Styles from './Styles';
+import { BannerAds } from '../../components';
+import { StatusBar } from 'expo-status-bar';
 
 
-const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-xxxxxxxxxxxxx/yyyyyyyyyyyyyy';
+
 
 type HomePropsType = {
   navigation: any;
@@ -109,7 +110,8 @@ export default function Home({ navigation }: HomePropsType) {
   }, [])
 
   return (
-    <View style={[{ flex: 1 },]} >
+    <View style={[{ flex: 1, backgroundColor: "#FFF" },]} >
+      <StatusBar backgroundColor='#FFF' animated translucent />
       <View style={[Styles.container,]} >
         {user && <Octicons onPress={onPressSettings} name="gear" size={24} color="black" style={{ position: 'absolute', top: 10, right: 20 }} />}
         <Animated.View style={[Styles.animationContainer, animateLottieContainer,]} >
@@ -137,15 +139,7 @@ export default function Home({ navigation }: HomePropsType) {
           </ScrollView>
         </View>
       </View>
-      <BannerAd
-        unitId={adUnitId}
-        size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-        requestOptions={{
-          requestNonPersonalizedAdsOnly: true,
-        }}
-        onAdFailedToLoad={() => <View></View>}
-        
-      />
+      <BannerAds />
     </View>
   )
 };

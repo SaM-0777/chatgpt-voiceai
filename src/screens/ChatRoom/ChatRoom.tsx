@@ -11,7 +11,7 @@ import auth from "@react-native-firebase/auth";
 // import { MicrophoneModal } from "../../containers";
 import CameraScreen from "../CameraScreen";
 import { Message, VerifyEmailModal, Header } from "../../containers";
-import { CustomInputToolbar } from "../../components";
+import { BannerAds, CustomInputToolbar } from "../../components";
 
 import { getPreviousChats } from "../../utils/api";
 
@@ -184,6 +184,7 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
         :
           <>
             {loading ?
+              <>
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#FFFFFF' }} >
                   <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: 0.5 * Dimensions.get('window').width, aspectRatio: 1, }} >
                     <LottieView
@@ -193,6 +194,8 @@ export default function ChatRoom({ route, navigation }: ChatRoomPropsType) {
                     />
                   </View>
                 </View>
+                <BannerAds />
+              </>
               :
                 <>
                   {isCamera ? 
